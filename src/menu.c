@@ -1033,6 +1033,7 @@ void Menu_Tick(void)
 				{OptType_Boolean, "MIDDLESCROLL", &stage.middlescroll, {.spec_boolean = {0}}},
 				{OptType_Boolean, "BOTPLAY", &stage.botplay, {.spec_boolean = {0}}},
 				{OptType_Boolean, "PRACTICE MODE", &stage.practice, {.spec_boolean = {0}}},
+				{OptType_Boolean, "BABY MODE", &stage.babymode, {.spec_boolean = {0}}},
 			};
 
 			if (stage.mode == StageMode_2P)
