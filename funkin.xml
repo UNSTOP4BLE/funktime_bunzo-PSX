@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Defines the ISO project -->
+<iso_project image_name="funkin.bin" cue_sheet="funkin.cue" no_xa="0">
+	<!-- Data track -->
+	<track type="data">
+		<!-- Identifiers -->
+		<identifiers
+			system        = "PLAYSTATION"
+			application   = "PLAYSTATION"
+			volume        = "PSXFUNKIN"
+			volume_set    = "PSXFUNKIN"
+			publisher     = "CUCKYDEV"
+			copyright     = "NINJAMUFFIN99"
+		/>
+		<license file="licensea.dat"/>
+		
+		<!-- Data directory tree -->
+		<directory_tree>
+			<!-- System -->
+			<file name = "system.cnf" type = "data" source = "iso/system.cnf"/>
+			<file name = "SCUS_000.00" type = "data" source = "funkin.ps-exe"/>
+			
+			<!-- Menu assets -->
+			<dir name = "menu">
+				<file name = "loading.tim" type = "data" source = "iso/menu/loading.tim"/>
+				<file name = "menu.arc" type = "data" source = "iso/menu/menu.arc"/>
+			</dir>
+			
+			<!-- Fonts -->
+			<dir name = "font">
+				<file name = "boldfont.tim" type = "data" source = "iso/font/boldfont.tim"/>
+				<file name = "arial.tim" type = "data" source = "iso/font/arial.tim"/>
+			</dir>
+			
+			<!-- Stage assets -->
+			<dir name = "stage">
+				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
+				<file name = "hud1.tim" type = "data" source = "iso/stage/hud1.tim"/>
+				<file name = "hud0weeb.tim" type = "data" source = "iso/stage/hud0weeb.tim"/>
+				<file name = "hud1weeb.tim" type = "data" source = "iso/stage/hud1weeb.tim"/>
+			</dir>
+			
+			<!-- Week 1 assets -->
+			<dir name = "week1">
+				<!-- Background art -->
+				<file name = "back.arc" type = "data" source = "iso/week1/back.arc"/>
+				
+				<!-- Bopeebo charts -->
+				<file name = "1.1e.cht" type = "data" source = "iso/chart/musical-memory-easy.json.cht"/>
+				<file name = "1.1n.cht" type = "data" source = "iso/chart/musical-memory.json.cht"/>
+				<file name = "1.1h.cht" type = "data" source = "iso/chart/musical-memory-hard.json.cht"/>
+			</dir>
+
+			<!-- Character assets -->
+			<dir name = "char">
+				<!-- Boyfriend assets -->
+				<file name = "bf.arc" type = "data" source = "iso/bf/main.arc"/>
+				<file name = "bfdead.arc" type = "data" source = "iso/bf/dead.arc"/>
+				<file name = "bfweeb.arc" type = "data" source = "iso/bf/weeb.arc"/>
+				
+				<!-- Dad assets -->
+				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
+				
+				<!-- Spook assets -->
+				<file name = "spook.arc" type = "data" source = "iso/spook/main.arc"/>
+				
+				<!-- Pico assets -->
+				<file name = "pico.arc" type = "data" source = "iso/pico/main.arc"/>
+				
+				<!-- Mom assets -->
+				<file name = "mom.arc" type = "data" source = "iso/mom/main.arc"/>
+				<file name = "momhair.tim" type = "data" source = "iso/mom/hair.tim"/>
+				
+				<!-- Christmas assets -->
+				<file name = "xmasbf.arc" type = "data" source = "iso/bf/xmas.arc"/>
+				<file name = "xmasp.arc" type = "data" source = "iso/xmasp/main.arc"/>
+				
+				<!-- Senpai assets -->
+				<file name = "senpai.arc" type = "data" source = "iso/senpai/main.arc"/>
+				<file name = "senpaim.arc" type = "data" source = "iso/senpaim/main.arc"/>
+				<file name = "spirit.arc" type = "data" source = "iso/spirit/main.arc"/>
+				
+				<!-- Girlfriend assets -->
+				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
+				<file name = "gftut.arc" type = "data" source = "iso/gf/tut.arc"/>
+				<file name = "gfweeb.arc" type = "data" source = "iso/gf/weeb.arc"/>
+				<file name = "speaker.tim" type = "data" source = "iso/gf/speaker.tim"/>
+			</dir>
+		    
+			<!-- Sound effect -->
+			<dir name = "sounds">
+				<!-- Menu Sounds -->
+				<file name = "scroll.vag" type = "data" source = "iso/sounds/scroll.vag"/>
+				<file name = "confirm.vag" type = "data" source = "iso/sounds/confirm.vag"/>
+				<file name = "cancel.vag" type = "data" source = "iso/sounds/cancel.vag"/>
+				<!-- Stage Sounds -->
+				<file name = "miss.vag" type = "data" source = "iso/sounds/miss.vag"/>
+				<file name = "intro1.vag" type = "data" source = "iso/sounds/intro1.vag"/>
+				<file name = "intro2.vag" type = "data" source = "iso/sounds/intro2.vag"/>
+				<file name = "intro3.vag" type = "data" source = "iso/sounds/intro3.vag"/>
+				<file name = "introgo.vag" type = "data" source = "iso/sounds/introgo.vag"/>
+				<file name = "intro1p.vag" type = "data" source = "iso/sounds/intro1p.vag"/>
+				<file name = "intro2p.vag" type = "data" source = "iso/sounds/intro2p.vag"/>
+				<file name = "intro3p.vag" type = "data" source = "iso/sounds/intro3p.vag"/>
+				<file name = "introgop.vag" type = "data" source = "iso/sounds/introgop.vag"/>
+			</dir>
+			
+			<!-- Music -->
+			<dir name = "music">
+				<file name = "menu.xa" type = "xa" source = "iso/music/menu.xa"/>
+				<dummy sectors="128"/>
+				<file name = "week1a.xa" type = "xa" source = "iso/music/week1a.xa"/>
+				<dummy sectors="128"/>
+			</dir>
+			
+			<!-- Dummy sectors -->
+			<dummy sectors="1024"/>
+		</directory_tree>
+	</track>
+</iso_project>
