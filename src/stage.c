@@ -26,7 +26,7 @@
 //Stage constants
 //#define STAGE_NOHUD //Disable the HUD
 
-#define STAGE_FREECAM //Freecam
+//#define STAGE_FREECAM //Freecam
 
 //normal note x
 static int note_x[8] = {
@@ -77,26 +77,10 @@ int soundcooldown;
 int drawshit;
 
 #include "character/bf.h"
-#include "character/bfweeb.h"
 #include "character/dad.h"
-#include "character/spook.h"
-#include "character/pico.h"
-#include "character/mom.h"
-#include "character/xmasbf.h"
-#include "character/xmasp.h"
-#include "character/senpai.h"
-#include "character/senpaim.h"
-#include "character/spirit.h"
 #include "character/gf.h"
-#include "character/gfweeb.h"
 
-#include "stage/dummy.h"
 #include "stage/week1.h"
-#include "stage/week2.h"
-#include "stage/week3.h"
-#include "stage/week4.h"
-#include "stage/week5.h"
-#include "stage/week6.h"
 
 static const StageDef stage_defs[StageId_Max] = {
 	#include "stagedef_disc1.h"
@@ -1017,11 +1001,14 @@ static void Stage_DrawNotes(void)
 							note_dst.y = -note_dst.y;
 							note_dst.h = -note_dst.h;
 						}
-						//draw for opponent
-						if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
-							Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
-						else
-							Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+						if(stage.babymode)
+						{
+							//draw for opponent
+							if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
+								Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
+							else
+								Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+						}
 					}
 				}
 				else
@@ -1046,10 +1033,13 @@ static void Stage_DrawNotes(void)
 						if (stage.downscroll)
 							note_dst.y = -note_dst.y - note_dst.h;
 						//draw for opponent
-						if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
-							Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
-						else
-							Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+						if(stage.babymode)
+						{
+							if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
+								Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
+							else
+								Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+						}
 					}
 				}
 			}
@@ -1073,11 +1063,13 @@ static void Stage_DrawNotes(void)
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
 				//draw for opponent
-				if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
-					Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
-				else
-					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
-				
+				if(stage.babymode)
+				{
+					if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
+						Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
+					else
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+				}
 				//Draw note fire
 				note_src.x = 192 + ((animf_count & 0x1) << 5);
 				note_src.y = 64 + ((animf_count & 0x2) * 24);
@@ -1093,11 +1085,14 @@ static void Stage_DrawNotes(void)
 				{
 					note_dst.h = note_dst.h * 3 / 2;
 				}
-				//draw for opponent
-				if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
-					Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
-				else
-					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+				if(stage.babymode)
+				{
+					//draw for opponent
+					if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
+						Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
+					else
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+				}
 				
 			}
 			else
@@ -1119,11 +1114,14 @@ static void Stage_DrawNotes(void)
 				
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
-				//draw for opponent
-				if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
-					Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
-				else
-					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+				if(stage.babymode)
+				{
+					//draw for opponent
+					if (stage.middlescroll && note->type & NOTE_FLAG_OPPONENT)
+						Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
+					else
+						Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);
+				}
 			}
 		}
 	}
@@ -1713,7 +1711,41 @@ void Stage_Tick(void)
 				note_x[7] = FIXED_DEC(-26,1) - FIXED_DEC(SCREEN_WIDEADD,4);
 			}
 
-
+			if (stage.babymode == 0 && stage.mode != StageMode_2P)
+			{
+				if (stage.mode == StageMode_Swap) {
+					//bf
+					note_x[0] = FIXED_DEC(-200,1) + FIXED_DEC(SCREEN_WIDEADD,4);
+					note_x[1] = FIXED_DEC(-200,1) + FIXED_DEC(SCREEN_WIDEADD,4); //+34
+					note_x[2] = FIXED_DEC(-200,1) + FIXED_DEC(SCREEN_WIDEADD,4);
+					note_x[3] = FIXED_DEC(-200,1) + FIXED_DEC(SCREEN_WIDEADD,4);
+					//opponent
+					note_x[4] = FIXED_DEC(26,1) - FIXED_DEC(SCREEN_WIDEADD,4);
+					note_x[5] = FIXED_DEC(60,1) - FIXED_DEC(SCREEN_WIDEADD,4); //+34
+					note_x[6] = FIXED_DEC(94,1) - FIXED_DEC(SCREEN_WIDEADD,4);
+					note_x[7] = FIXED_DEC(128,1) - FIXED_DEC(SCREEN_WIDEADD,4);
+				}
+				else {
+					//bf
+					note_x[0] = FIXED_DEC(26,1) + FIXED_DEC(SCREEN_WIDEADD,4);
+					note_x[1] = FIXED_DEC(60,1) + FIXED_DEC(SCREEN_WIDEADD,4); //+34
+					note_x[2] = FIXED_DEC(94,1) + FIXED_DEC(SCREEN_WIDEADD,4);
+					note_x[3] = FIXED_DEC(128,1) + FIXED_DEC(SCREEN_WIDEADD,4);
+					//opponent
+					note_x[4] = FIXED_DEC(-200,1) - FIXED_DEC(SCREEN_WIDEADD,4);
+					note_x[5] = FIXED_DEC(-200,1) - FIXED_DEC(SCREEN_WIDEADD,4); //+34
+					note_x[6] = FIXED_DEC(-200,1) - FIXED_DEC(SCREEN_WIDEADD,4);
+					note_x[7] = FIXED_DEC(-200,1) - FIXED_DEC(SCREEN_WIDEADD,4);
+				}
+			}
+			else
+			{
+				//opponent
+				note_x[4] = FIXED_DEC(-128,1) - FIXED_DEC(SCREEN_WIDEADD,4);
+				note_x[5] = FIXED_DEC(-94,1) - FIXED_DEC(SCREEN_WIDEADD,4); //+34
+				note_x[6] = FIXED_DEC(-60,1) - FIXED_DEC(SCREEN_WIDEADD,4);
+				note_x[7] = FIXED_DEC(-26,1) - FIXED_DEC(SCREEN_WIDEADD,4);
+			}
 
 			Stage_CountDown();
 			if (stage.botplay == 1)
@@ -1998,9 +2030,10 @@ void Stage_Tick(void)
 				
 				if (stage.downscroll)
 					note_dst.y = -note_dst.y - note_dst.h;
+
 				Stage_DrawStrum(i | 4, &note_src, &note_dst);
 
-				if (stage.middlescroll)
+				if (stage.middlescroll && stage.babymode)
 					Stage_BlendTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump, 1);
 				else
 					Stage_DrawTex(&stage.tex_hud0, &note_src, &note_dst, stage.bump);

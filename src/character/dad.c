@@ -61,29 +61,32 @@ static const CharFrame char_dad_frame[] = {
 	{Dad_ArcMain_Idle4, {  0,   0, 154, 114}, { 0, 10}},
 	{Dad_ArcMain_Idle4, {  0, 114, 154, 115}, { 0, 10}},
 	
-
-	{Dad_ArcMain_Left0, {  0,   0,  0,  0}, { 0, 0}},
-	{Dad_ArcMain_Left1, {  0,   0,  0,  0}, { 0, 0}},
+	{Dad_ArcMain_Left0, {  0,   0, 148, 146}, { 30, 70}},
+	{Dad_ArcMain_Left1, {  0,   0, 150, 148}, { 30, 70}},
+	{Dad_ArcMain_Left2, {  0,   0, 150, 153}, { 30, 70}},
 	
-	{Dad_ArcMain_Down0, {  0,   0,  0,  0}, { 0, 0}},
-	{Dad_ArcMain_Down1, {  0,   0,  0,  0}, { 0, 0}},
+	{Dad_ArcMain_Down0, {  0,   0, 162, 179}, { 0,  0 + 40}},
+	{Dad_ArcMain_Down1, {  0,   0, 162, 180}, {-1, -2 + 40}},
+	{Dad_ArcMain_Down2, {  0,   0, 158, 178}, {-5, -5 + 40}},
 
-	{Dad_ArcMain_Up0, {  0,   0,  0,  0}, { 0, 0}},
-	{Dad_ArcMain_Up1, {  0,   0,  0,  0}, { 0, 0}},
+	{Dad_ArcMain_Up0, {  0,   0, 138, 153}, { 10, 5 + 70}},
+	{Dad_ArcMain_Up1, {  0,   0, 140, 148}, { 10, 1 + 70}},
+	{Dad_ArcMain_Up2, {  0,   0, 144, 149}, { 12, 0 + 70}},
 
-	{Dad_ArcMain_Right0, {  0,   0,  0,  0}, { 0, 0}},
-	{Dad_ArcMain_Right1, {  0,   0,  0,  0}, { 0, 0}},
+	{Dad_ArcMain_Right0, {  0,   0, 174, 155}, { 0,  0 + 50}},
+	{Dad_ArcMain_Right1, {  0,   0, 174, 153}, { 0,  0 + 50}},
+	{Dad_ArcMain_Right2, {  0,   0, 174, 152}, { 0, -2 + 50}},
 };
 
 static const Animation char_dad_anim[CharAnim_Max] = {
 	{2, (const u8[]){ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ASCR_BACK, 0}}, //CharAnim_Idle
-	{2, (const u8[]){ 10, 11, 12, ASCR_BACK, 1}},         //CharAnim_Left
+	{2, (const u8[]){ 10, 11, 12, ASCR_BACK, 0}},         //CharAnim_Left
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_LeftAlt
-	{2, (const u8[]){ 6,  7, ASCR_BACK, 1}},         //CharAnim_Down
+	{2, (const u8[]){ 13, 14, 15, ASCR_BACK, 0}},         //CharAnim_Down
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_DownAlt
-	{2, (const u8[]){ 8,  9, ASCR_BACK, 1}},         //CharAnim_Up
+	{2, (const u8[]){ 16, 17, 18, ASCR_BACK, 0}},         //CharAnim_Up
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_UpAlt
-	{2, (const u8[]){10, 11, ASCR_BACK, 1}},         //CharAnim_Right
+	{2, (const u8[]){ 19, 20, 21, ASCR_BACK, 0}},         //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_RightAlt
 };
 

@@ -53,6 +53,8 @@ int main(int argc, char **argv)
 	//botplay
 	stage.botplay = 1;
 
+	stage.babymode = 0;
+	
 	//Remember arguments
 	my_argc = argc;
 	my_argv = argv;
