@@ -74,7 +74,6 @@
 				
 				<!-- Christmas assets -->
 				<file name = "xmasbf.arc" type = "data" source = "iso/bf/xmas.arc"/>
-				<file name = "xmasp.arc" type = "data" source = "iso/xmasp/main.arc"/>
 				
 				<!-- Senpai assets -->
 				<file name = "senpai.arc" type = "data" source = "iso/senpai/main.arc"/>

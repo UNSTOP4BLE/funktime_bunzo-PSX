@@ -16,7 +16,6 @@ all: \
 	iso/mom/main.arc \
 	iso/mom/hair.tim \
 	iso/bf/xmas.arc \
-	iso/xmasp/main.arc \
 	iso/senpai/main.arc \
 	iso/senpaim/main.arc \
 	iso/spirit/main.arc \
@@ -48,7 +47,7 @@ iso/bf/dead.arc: iso/bf/dead1.tim iso/bf/dead2.tim iso/bf/retry.tim
 iso/bf/weeb.arc: iso/bf/weeb0.tim iso/bf/weeb1.tim
 
 # Dad
-iso/dad/main.arc: iso/dad/idle0.tim iso/dad/idle1.tim iso/dad/left.tim iso/dad/down.tim iso/dad/up.tim iso/dad/right.tim
+iso/dad/main.arc: iso/dad/idle0.tim iso/dad/idle1.tim iso/dad/idle2.tim iso/dad/idle3.tim iso/dad/idle4.tim iso/dad/left0.tim iso/dad/left1.tim iso/dad/left2.tim iso/dad/down0.tim iso/dad/down1.tim iso/dad/down2.tim iso/dad/up0.tim iso/dad/up1.tim iso/dad/up2.tim iso/dad/right0.tim iso/dad/right1.tim iso/dad/right2.tim
 
 # Spook
 iso/spook/main.arc: iso/spook/idle0.tim iso/spook/idle1.tim iso/spook/idle2.tim iso/spook/left.tim iso/spook/down.tim iso/spook/up.tim iso/spook/right.tim
@@ -61,9 +60,6 @@ iso/mom/main.arc: iso/mom/idle0.tim iso/mom/idle1.tim iso/mom/left.tim iso/mom/d
 
 # Xmas BF
 iso/bf/xmas.arc: iso/bf/xmasbf0.tim iso/bf/xmasbf1.tim iso/bf/xmasbf2.tim iso/bf/xmasbf3.tim iso/bf/dead0.tim
-
-# Xmas Parents
-iso/xmasp/main.arc: iso/xmasp/idle0.tim iso/xmasp/idle1.tim iso/xmasp/idle2.tim iso/xmasp/idle3.tim iso/xmasp/lefta0.tim iso/xmasp/lefta1.tim iso/xmasp/leftb0.tim iso/xmasp/leftb1.tim iso/xmasp/downa0.tim iso/xmasp/downa1.tim iso/xmasp/downb0.tim iso/xmasp/downb1.tim iso/xmasp/upa0.tim iso/xmasp/upa1.tim iso/xmasp/upb0.tim iso/xmasp/upb1.tim iso/xmasp/righta0.tim iso/xmasp/righta1.tim iso/xmasp/rightb0.tim iso/xmasp/rightb1.tim
 
 # Senpai
 iso/senpai/main.arc: iso/senpai/senpai0.tim iso/senpai/senpai1.tim
