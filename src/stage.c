@@ -247,19 +247,10 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	};
 	this->score += score_inc[hit_type];
 
-	this->min_accuracy += 1;
+	this->min_accuracy += 8;
 
-	if (hit_type == 3)
-	this->max_accuracy += 4;
+	this->max_accuracy += 8 + hit_type*2;
 
-	else if (hit_type == 2)
-	this->max_accuracy += 3;
-
-	else if (hit_type == 1)
-	this->max_accuracy += 2;
-
-	else
-	this->max_accuracy += 1;
 	this->refresh_accuracy = true;
 	this->refresh_score = true;
 	
@@ -298,7 +289,7 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 
 static void Stage_MissNote(PlayerState *this)
 {
-	this->max_accuracy += 1;
+	this->max_accuracy += 10;
 	this->refresh_accuracy = true;
 	this->miss += 1;
 	this->refresh_miss = true;
@@ -1414,11 +1405,11 @@ static void Stage_LoadState(void)
 		stage.player_state[i].accuracy = 0;
 		stage.player_state[i].max_accuracy = 0;
 		stage.player_state[i].min_accuracy = 0;
-		strcpy(stage.player_state[i].accuracy_text, "0");
-		strcpy(stage.player_state[i].miss_text, "0");
+		strcpy(stage.player_state[i].accuracy_text, "Accuracy: ?");
+		strcpy(stage.player_state[i].miss_text, "Misses: 0");
 		stage.player_state[i].refresh_score = false;
 		stage.player_state[i].score = 0;
-		strcpy(stage.player_state[i].score_text, "0");
+		strcpy(stage.player_state[i].score_text, "Score: 0");
 		
 		stage.player_state[i].pad_held = stage.player_state[i].pad_press = 0;
 	}
@@ -1452,6 +1443,10 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 
 	//Load SFX
 	Stage_LoadSFX();
+
+
+	//load fonts
+	FontData_Load(&stage.font_cdr, Font_CDR);
 
 	//Load characters
 	Stage_LoadPlayer();
@@ -2040,333 +2035,6 @@ void Stage_Tick(void)
 			}
 			
 			
-			if (stage.mode < StageMode_2P)
-			{
-			 //Draw score
-			for (int i = 0; i < ((stage.mode >= StageMode_2P) ? 2 : 1); i++)
-			{
-				PlayerState *this = &stage.player_state[i];
-				
-				//Get string representing number
-				if (this->refresh_score)
-				{
-					if (this->score != 0)
-						sprintf(this->score_text, "%d0", this->score * stage.max_score / this->max_score);
-					else
-						strcpy(this->score_text, "0");
-					this->refresh_score = false;
-				}
-				
-				//Display score
-				RECT score_src = {80, 224, 34, 9};
-				RECT_FIXED score_dst = {FIXED_DEC(-150,1), (SCREEN_HEIGHT2 - 22) << FIXED_SHIFT, FIXED_DEC(34,1), FIXED_DEC(9,1)};
-				if (stage.downscroll)
-					score_dst.y = -score_dst.y - score_dst.h;
-
-				//shake score
-				score_dst.y += stage.noteshakey;
-				score_dst.x += stage.noteshakex;
-				
-				Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-				
-				//Draw number
-				score_src.y = 240;
-				score_src.w = 8;
-				score_dst.x += FIXED_DEC(40,1);
-				score_dst.w = FIXED_DEC(8,1);
-				
-				for (const char *p = this->score_text; ; p++)
-				{
-					//Get character
-					char c = *p;
-					if (c == '\0')
-						break;
-					
-					//Draw character
-					if (c == '-')
-						score_src.x = 160;
-					else //Should be a number
-						score_src.x = 80 + ((c - '0') << 3);
-					
-					Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-					
-					//Move character right
-					score_dst.x += FIXED_DEC(7,1);
-				}
-			}
-			
-			//Draw Combo Break
-			for (int i = 0; i < ((stage.mode >= StageMode_2P) ? 2 : 1); i++)
-			{
-				PlayerState *this = &stage.player_state[i];
-				
-				//Get string representing number
-				if (this->refresh_miss)
-				{
-					if (this->miss != 0)
-						sprintf(this->miss_text, "%d", this->miss);
-					else
-						strcpy(this->miss_text, "0");
-					this->refresh_miss = false;
-				}
-				
-				//Display score
-				RECT score_src = {169, 246, 36, 9};
-				RECT_FIXED score_dst = {FIXED_DEC(-60,1), (SCREEN_HEIGHT2 - 22) << FIXED_SHIFT, FIXED_DEC(36,1), FIXED_DEC(9,1)};
-				if (stage.downscroll)
-					score_dst.y = -score_dst.y - score_dst.h;
-
-				//shake miss
-				score_dst.y += stage.noteshakey;
-				score_dst.x += stage.noteshakex;
-				
-				RECT slash_src = {163, 223, 3, 13};
-				RECT_FIXED slash_dst = {FIXED_DEC(-64,1), score_dst.y - FIXED_DEC(2,1), FIXED_DEC(3,1), FIXED_DEC(13,1)};
-				//shake slash
-				slash_dst.x += stage.noteshakex;
-				Stage_DrawTex(&stage.tex_hud0, &slash_src, &slash_dst, stage.bump);
-				
-				Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-				
-				//Draw number
-				score_src.y = 240;
-				score_src.w = 8;
-				score_dst.x += FIXED_DEC(70,1);
-				score_dst.w = FIXED_DEC(8,1);
-				
-				for (const char *p = this->miss_text; ; p++)
-				{
-					//Get character
-					char c = *p;
-					if (c == '\0')
-						break;
-					
-					//Draw character
-					if (c == '-')
-						score_src.x = 160;
-					else if (c == '.')
-						score_src.x = 160;
-					else //Should be a number
-						score_src.x = 80 + ((c - '0') << 3);
-					
-					Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-					
-					//Move character right
-					score_dst.x += FIXED_DEC(7,1);
-				}
-			}
-			
-			
-			
-			//Draw Accuracy
-			for (int i = 0; i < ((stage.mode >= StageMode_2P) ? 2 : 1); i++)
-			{
-				PlayerState *this = &stage.player_state[i];
-				
-				this->accuracy = (this->min_accuracy * 100) / (this->max_accuracy);
-				
-				//Get string representing number
-				if (this->refresh_accuracy)
-				{
-					if (this->accuracy != 0)
-						sprintf(this->accuracy_text, "%d", this->accuracy);
-					else
-						strcpy(this->accuracy_text, "0");
-					this->refresh_accuracy = false;
-				}
-				
-				//Display score
-				RECT score_src = {205, 246, 51, 9};
-				RECT_FIXED score_dst = {FIXED_DEC(39,1), (SCREEN_HEIGHT2 - 22) << FIXED_SHIFT, FIXED_DEC(51,1), FIXED_DEC(9,1)};
-				if (stage.downscroll)
-					score_dst.y = -score_dst.y - score_dst.h;
-				
-				//shake accurate
-				score_dst.y += stage.noteshakey;
-				score_dst.x += stage.noteshakex;
-				
-				RECT slash_src = {163, 223, 3, 13};
-				RECT_FIXED slash_dst = {FIXED_DEC(35,1), score_dst.y - FIXED_DEC(2,1), FIXED_DEC(3,1), FIXED_DEC(13,1)};
-
-				//shake slash
-				slash_dst.x += stage.noteshakex;
-
-				Stage_DrawTex(&stage.tex_hud0, &slash_src, &slash_dst, stage.bump);
-				
-				RECT accur_src = {138, 223, 9, 11};
-				u8 accura;
-				if (this->accuracy == 100)
-					accura = 117;
-				else if (this->accuracy > 10)
-					accura = 110;
-				else
-					accura = 102;
-				
-				RECT_FIXED accur_dst = {FIXED_DEC(accura,1), score_dst.y - FIXED_DEC(1,1), FIXED_DEC(9,1), FIXED_DEC(11,1)};
-				accur_dst.x += stage.noteshakex;	
-				Stage_DrawTex(&stage.tex_hud0, &accur_src, &accur_dst, stage.bump);
-
-				Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-				
-				//Draw number
-				score_src.y = 240;
-				score_src.w = 8;
-				score_dst.x += FIXED_DEC(56,1);
-				score_dst.w = FIXED_DEC(8,1);
-				
-				for (const char *p = this->accuracy_text; ; p++)
-				{
-					//Get character
-					char c = *p;
-					if (c == '\0')
-						break;
-					
-					//Draw character
-					if (c == '-')
-						score_src.x = 160;
-					else if (c == '.')
-						score_src.x = 160;
-					else //Should be a number
-						score_src.x = 80 + ((c - '0') << 3);
-					
-					Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-					
-					//Move character right
-					score_dst.x += FIXED_DEC(7,1);
-				}
-			}
-			}
-
-			else
-			{
-			//Draw Accuracy
-			for (int i = 0; i < ((stage.mode >= StageMode_2P) ? 2 : 1); i++)
-			{
-				PlayerState *this = &stage.player_state[i];
-				
-				this->accuracy = (this->min_accuracy * 100) / (this->max_accuracy);
-				
-				//Get string representing number
-				if (this->refresh_accuracy)
-				{
-					if (this->accuracy != 0)
-						sprintf(this->accuracy_text, "%d", this->accuracy);
-					else
-						strcpy(this->accuracy_text, "0");
-					this->refresh_accuracy = false;
-				}
-				
-				//Display score
-				RECT score_src = {205, 246, 51, 9};
-				RECT_FIXED score_dst = {(i ^ (stage.mode == StageMode_Swap)) ? FIXED_DEC(-100,1) : FIXED_DEC(40,1), (SCREEN_HEIGHT2 - 42) << FIXED_SHIFT, FIXED_DEC(51,1), FIXED_DEC(9,1)};
-				if (stage.downscroll)
-					score_dst.y = -score_dst.y - score_dst.h;
-				//shake accurate
-				score_dst.y += stage.noteshakey;
-				score_dst.x += stage.noteshakex;
-				
-				RECT accur_src = {138, 223, 9, 11};
-				u8 accura;
-				if (this->accuracy == 100)
-					accura = 117;
-				else if (this->accuracy > 10)
-					accura = 110;
-				else
-					accura = 102;
-				
-				RECT_FIXED accur_dst = {score_dst.x + FIXED_DEC(accura,1) - FIXED_DEC(40,1), score_dst.y - FIXED_DEC(1,1), FIXED_DEC(9,1), FIXED_DEC(11,1)};
-				Stage_DrawTex(&stage.tex_hud0, &accur_src, &accur_dst, stage.bump);
-				
-				Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-				
-				//Draw number
-				score_src.y = 240;
-				score_src.w = 8;
-				score_dst.x += FIXED_DEC(56,1);
-				score_dst.w = FIXED_DEC(8,1);
-				
-				for (const char *p = this->accuracy_text; ; p++)
-				{
-					//Get character
-					char c = *p;
-					if (c == '\0')
-						break;
-					
-					//Draw character
-					if (c == '-')
-						score_src.x = 160;
-					else if (c == '.')
-						score_src.x = 160;
-					else //Should be a number
-						score_src.x = 80 + ((c - '0') << 3);
-					
-					Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-					
-					//Move character right
-					score_dst.x += FIXED_DEC(7,1);
-				}
-			}
-			
-			//Draw Combo Break
-			for (int i = 0; i < ((stage.mode >= StageMode_2P) ? 2 : 1); i++)
-			{
-				PlayerState *this = &stage.player_state[i];
-				
-				//Get string representing number
-				if (this->refresh_miss)
-				{
-					if (this->miss != 0)
-						sprintf(this->miss_text, "%d", this->miss);
-					else
-						strcpy(this->miss_text, "0");
-					this->refresh_miss = false;
-				}
-				
-				//Display miss
-				RECT miss_src = {169, 246, 36, 9};
-				RECT_FIXED miss_dst = {(i ^ (stage.mode == StageMode_Swap)) ? FIXED_DEC(-50,1) : FIXED_DEC(100,1), (SCREEN_HEIGHT2 - 22) << FIXED_SHIFT, FIXED_DEC(36,1), FIXED_DEC(9,1)};
-				if (stage.downscroll)
-					miss_dst.y = -miss_dst.y - miss_dst.h;
-				
-				RECT slash_src = {163, 223, 3, 13};
-				RECT_FIXED slash_dst = {miss_dst.x  - FIXED_DEC(4,1), miss_dst.y - FIXED_DEC(2,1), FIXED_DEC(3,1), FIXED_DEC(13,1)};
-				
-				//shake slash
-				Stage_DrawTex(&stage.tex_hud0, &slash_src, &slash_dst, stage.bump);
-				
-				//shake miss
-				miss_dst.y += stage.noteshakey;
-				miss_dst.x += stage.noteshakex;
-				Stage_DrawTex(&stage.tex_hud0, &miss_src, &miss_dst, stage.bump);
-				
-				//Draw number
-				miss_src.y = 240;
-				miss_src.w = 8;
-				miss_dst.x += FIXED_DEC(40,1);
-				miss_dst.w = FIXED_DEC(8,1);
-				
-				for (const char *p = this->miss_text; ; p++)
-				{
-					//Get character
-					char c = *p;
-					if (c == '\0')
-						break;
-					
-					//Draw character
-					if (c == '-')
-						miss_src.x = 160;
-					else if (c == '.')
-						miss_src.x = 160;
-					else //Should be a number
-						miss_src.x = 80 + ((c - '0') << 3);
-					
-					Stage_DrawTex(&stage.tex_hud0, &miss_src, &miss_dst, stage.bump);
-					
-					//Move character right
-					miss_dst.x += FIXED_DEC(7,1);
-				}
-			}
-
 			//Draw score
 			for (int i = 0; i < ((stage.mode >= StageMode_2P) ? 2 : 1); i++)
 			{
@@ -2376,50 +2044,86 @@ void Stage_Tick(void)
 				if (this->refresh_score)
 				{
 					if (this->score != 0)
-						sprintf(this->score_text, "%d0", this->score * stage.max_score / this->max_score);
+						sprintf(this->score_text, "Score: %d0", this->score * stage.max_score / this->max_score);
 					else
-						strcpy(this->score_text, "0");
+						strcpy(this->score_text, "Score: 0");
 					this->refresh_score = false;
 				}
 				
-				//Display score
-				RECT score_src = {80, 224, 40, 10};
-				RECT_FIXED score_dst = {(i ^ (stage.mode == StageMode_Swap)) ? FIXED_DEC(-134,1) : FIXED_DEC(14,1), (SCREEN_HEIGHT2 - 22) << FIXED_SHIFT, FIXED_DEC(40,1), FIXED_DEC(10,1)};
-				if (stage.downscroll)
-					score_dst.y = -score_dst.y - score_dst.h;
-				
-				//stage score
-				score_dst.x += stage.noteshakex;
-				score_dst.y += stage.noteshakey;
-				
-				Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-				
-				//Draw number
-				score_src.y = 240;
-				score_src.w = 8;
-				score_dst.x += FIXED_DEC(39,1);
-				score_dst.w = FIXED_DEC(8,1);
-				
-				for (const char *p = this->score_text; ; p++)
-				{
-					//Get character
-					char c = *p;
-					if (c == '\0')
-						break;
-					
-					//Draw character
-					if (c == '-')
-						score_src.x = 160;
-					else //Should be a number
-						score_src.x = 80 + ((c - '0') << 3);
-					
-					Stage_DrawTex(&stage.tex_hud0, &score_src, &score_dst, stage.bump);
-					
-					//Move character right
-					score_dst.x += FIXED_DEC(7,1);
-				}
+				//Draw text
+				stage.font_cdr.draw(&stage.font_cdr,
+					this->score_text,
+					(stage.mode == StageMode_2P && i == 0) ? FIXED_DEC(10,1) : FIXED_DEC(-150,1), 
+					(SCREEN_HEIGHT2 - 22) << FIXED_SHIFT,
+					FontAlign_Left
+				);
 			}
-		}
+			
+			//Draw Combo Break
+			for (int i = 0; i < ((stage.mode >= StageMode_2P) ? 2 : 1); i++)
+			{
+				PlayerState *this = &stage.player_state[i];
+				
+				//Get string representing number
+				if (this->refresh_miss)
+				{
+					if (this->miss != 0)
+						sprintf(this->miss_text, "Misses: %d", this->miss);
+					else
+						strcpy(this->miss_text, "Misses: 0");
+					this->refresh_miss = false;
+				}
+
+				//Draw text
+				stage.font_cdr.draw(&stage.font_cdr,
+					this->miss_text,
+					(stage.mode == StageMode_2P && i == 0) ? FIXED_DEC(100,1) : FIXED_DEC(-60,1), 
+					(SCREEN_HEIGHT2 - 22) << FIXED_SHIFT,
+					FontAlign_Left
+				);
+			}
+			
+			//Draw Accuracy
+			for (int i = 0; i < ((stage.mode >= StageMode_2P) ? 2 : 1); i++)
+			{
+				PlayerState *this = &stage.player_state[i];
+				
+				this->accuracy = (this->min_accuracy * 100) / (this->max_accuracy);
+
+				//rank
+				if (this->accuracy == 100 && this->miss == 0)
+				strcpy(this->rank,"[SFC]");
+
+				else if (this-> accuracy >= 80 && this->miss == 0)
+				strcpy(this->rank,"[GFC]");
+
+				else if (this->miss == 0)
+				strcpy(this->rank,"[FC]");
+
+				else
+				strcpy(this->rank,"");
+				
+				//Get string representing number
+				if (this->refresh_accuracy)
+				{
+					if (this->accuracy != 0)
+						sprintf(this->accuracy_text, "Accuracy: %d%% %s", this->accuracy, this->rank);
+					else
+						strcpy(this->accuracy_text, "Accuracy: ?");
+					this->refresh_accuracy = false;
+				}
+				
+				//Display accuracy
+
+				//Draw text
+				//sorry for this shit lmao
+				stage.font_cdr.draw(&stage.font_cdr,
+					this->accuracy_text,
+					(stage.mode == StageMode_2P && i == 0) ? FIXED_DEC(50,1) : (stage.mode == StageMode_2P && i == 1) ? FIXED_DEC(-110,1) : FIXED_DEC(39,1), 
+					(stage.mode == StageMode_2P) ? FIXED_DEC(85,1) : (SCREEN_HEIGHT2 - 22) << FIXED_SHIFT,
+					FontAlign_Left
+				);
+			}
 			
 			if (stage.mode < StageMode_2P)
 			{

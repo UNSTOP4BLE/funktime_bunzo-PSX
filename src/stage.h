@@ -15,6 +15,7 @@
 #include "character.h"
 #include "player.h"
 #include "object.h"
+#include "font.h"
 
 #include "network.h"
 
@@ -172,7 +173,9 @@ typedef struct
 	s32 min_accuracy;
 	s32 accuracy;
 	s32 max_accuracy;
-	char accuracy_text[13];
+	char accuracy_text[21];
+
+	char rank[13];
 	
 	u16 pad_held, pad_press;
 } PlayerState;
@@ -192,6 +195,9 @@ typedef struct
 	const StageDef *stage_def;
 	StageId stage_id;
 	StageDiff stage_diff;
+
+	//font
+	FontData font_cdr;
 	
 	IO_Data chart_data;
 	Section *sections;
