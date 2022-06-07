@@ -26,7 +26,7 @@
 //Stage constants
 //#define STAGE_NOHUD //Disable the HUD
 
-//#define STAGE_FREECAM //Freecam
+#define STAGE_FREECAM //Freecam
 
 //normal note x
 static int note_x[8] = {
@@ -75,6 +75,7 @@ boolean opponentsing;
 static u32 Sounds[4];
 int soundcooldown;
 int drawshit;
+#define opponenty 120
 
 #include "character/bf.h"
 #include "character/dad.h"
@@ -2125,6 +2126,8 @@ void Stage_Tick(void)
 				);
 			}
 			
+			stage.opponent->y = FIXED_DEC(-stage.player_state[0].health / 120 - opponenty,1);
+
 			if (stage.mode < StageMode_2P)
 			{
 				//Perform health checks
@@ -2141,8 +2144,9 @@ void Stage_Tick(void)
 				if (stage.player_state[0].health <= 0 && stage.practice)
 					stage.player_state[0].health = 0;
 
+/*
 				//Draw health heads
-				Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i,    1);
+				/Stage_DrawHealth(stage.player_state[0].health, stage.player->health_i,    1);
 				Stage_DrawHealth(stage.player_state[0].health, stage.opponent->health_i, -1);
 				
 				//Draw health bar
@@ -2170,7 +2174,7 @@ void Stage_Tick(void)
 				health_dst.w = health_back.w << FIXED_SHIFT;
 				Stage_DrawTex(&stage.tex_hud1, &health_back, &health_dst, stage.bump);
 
-				
+			*/	
 			}
 			
 			//Hardcoded stage stuff
