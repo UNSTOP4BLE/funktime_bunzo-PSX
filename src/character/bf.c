@@ -100,15 +100,15 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_Down1, {0,   0,  151, 122}, { 85, 99}}, //7 down 1
 	{BF_ArcMain_Down1, {0, 122,  151, 102}, { 67, 100}}, //8 down 2
 	
-	{BF_ArcMain_Up0, {0,   0,  157, 119}, { 0,  0}}, //9 up 1
-	{BF_ArcMain_Up0, {0, 119,  157, 132}, { 0,  0}}, //10 up 2
-	{BF_ArcMain_Up1, {0,   0,  149, 116}, { 0,  0}}, //9 up 1
-	{BF_ArcMain_Up1, {0, 116,  149, 104}, { 0,  0}}, //10 up 2
+	{BF_ArcMain_Up0, {0,   0,  157, 119}, { 61, 103}}, //9 up 1
+	{BF_ArcMain_Up0, {0, 119,  157, 132}, { 61, 103}}, //10 up 2
+	{BF_ArcMain_Up1, {0,   0,  149, 116}, { 62, 102}}, //9 up 1
+	{BF_ArcMain_Up1, {0, 116,  149, 104}, { 62, 102}}, //10 up 2
 	
-	{BF_ArcMain_Right0, {0,   0,  248, 104}, { 0,  0}}, //11 right 1
-	{BF_ArcMain_Right0, {0, 104,  248, 108}, { 0,  0}}, //12 right 2
-	{BF_ArcMain_Right1, {0,   0,  235, 103}, { 0,  0}}, //11 right 1
-	{BF_ArcMain_Right1, {0, 103,  159, 103}, { 0,  0}}, //12 right 2
+	{BF_ArcMain_Right0, {0,   0,  248, 104}, { 52, 101}}, //11 right 1
+	{BF_ArcMain_Right0, {0, 104,  248, 108}, { 50, 101}}, //12 right 2
+	{BF_ArcMain_Right1, {0,   0,  235, 103}, { 51, 101}}, //11 right 1
+	{BF_ArcMain_Right1, {0, 103,  159, 103}, { 51, 101}}, //12 right 2
 
 	{BF_ArcMain_Idle, {  0,   0,  93, 108}, { 52, 101}}, //20 left miss 1
 	{BF_ArcMain_Idle, { 94,   0,  93, 108}, { 52, 101}}, //21 left miss 2
