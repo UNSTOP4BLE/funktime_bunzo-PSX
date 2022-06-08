@@ -85,20 +85,20 @@ typedef struct
 
 //Boyfriend player definitions
 static const CharFrame char_bf_frame[] = {
-	{BF_ArcMain_Idle, {  0,   0, 124,  94}, { 65,  93}}, //0 idle 1
+	{BF_ArcMain_Idle, {  0,   0, 124,  94}, { 65,  92}}, //0 idle 1
 	{BF_ArcMain_Idle, {124,   0, 124,  93}, { 65,  91}}, //1 idle 2
 	{BF_ArcMain_Idle, {  0,  94, 123,  95}, { 64,  92}}, //2 idle 3
 	{BF_ArcMain_Idle, {123,  93, 125,  96}, { 64,  94}}, //3 idle 4
 	
-	{BF_ArcMain_Left0, {0,    0,  247, 103}, { 0,  0}}, //5 left 1
-	{BF_ArcMain_Left0, {0,  103,  247, 106}, { 0,  0}}, //6 left 2
-	{BF_ArcMain_Left1, {0,    0,  234, 103}, { 0,  0}}, //5 left 1
-	{BF_ArcMain_Left1, {0,  103,  181, 103}, { 0,  0}}, //6 left 2
+	{BF_ArcMain_Left0, {0,    0,  247, 103}, {180, 101}}, //5 left 1
+	{BF_ArcMain_Left0, {0,  103,  247, 106}, {191, 101}}, //6 left 2
+	{BF_ArcMain_Left1, {0,    0,  234, 103}, {178, 101}}, //5 left 1
+	{BF_ArcMain_Left1, {0,  103,  181, 103}, { 96, 102}}, //6 left 2
 	
-	{BF_ArcMain_Down0, {0,   0,  162, 126}, { 0,  0}}, //7 down 1
-	{BF_ArcMain_Down0, {0, 126,  162, 126}, { 0,  0}}, //8 down 2
-	{BF_ArcMain_Down1, {0,   0,  151, 122}, { 0,  0}}, //7 down 1
-	{BF_ArcMain_Down1, {0, 122,  151, 102}, { 0,  0}}, //8 down 2
+	{BF_ArcMain_Down0, {0,   0,  162, 126}, { 89, 99}}, //7 down 1
+	{BF_ArcMain_Down0, {0, 126,  162, 126}, { 94, 97}}, //8 down 2
+	{BF_ArcMain_Down1, {0,   0,  151, 122}, { 85, 99}}, //7 down 1
+	{BF_ArcMain_Down1, {0, 122,  151, 102}, { 67, 100}}, //8 down 2
 	
 	{BF_ArcMain_Up0, {0,   0,  157, 119}, { 0,  0}}, //9 up 1
 	{BF_ArcMain_Up0, {0, 119,  157, 132}, { 0,  0}}, //10 up 2
