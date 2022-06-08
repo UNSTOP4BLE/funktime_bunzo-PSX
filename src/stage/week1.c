@@ -10,6 +10,10 @@
 #include "../mem.h"
 #include "../stage.h"
 
+
+#include "../pad.h"
+
+int shit, ass;
 //Week 1 background structure
 typedef struct
 {
@@ -28,86 +32,56 @@ void Back_Week1_DrawBG(StageBack *back)
 	
 	fixed_t fx, fy;
 	
-	//Draw curtains
-	fx = (stage.camera.x * 5) >> 2;
-	fy = (stage.camera.y * 5) >> 2;
-	
-	RECT curtainl_src = {0, 0, 107, 221};
-	RECT_FIXED curtainl_dst = {
-		FIXED_DEC(-250,1) - FIXED_DEC(SCREEN_WIDEOADD,2) - fx,
-		FIXED_DEC(-150,1) - fy,
-		FIXED_DEC(107,1),
-		FIXED_DEC(221,1)
+	fixed_t beat_bop;
+	if ((stage.song_step & 0x3) == 0)
+		beat_bop = FIXED_UNIT - ((stage.note_scroll / 24) & FIXED_LAND);
+	else
+		beat_bop = 0;
+
+	if (pad_state.held & PAD_UP)
+		ass ++;
+	if (pad_state.held & PAD_DOWN)
+		ass --;
+	if (pad_state.held & PAD_LEFT)
+		shit --;
+	if (pad_state.held & PAD_RIGHT)
+		shit ++;
+
+	//Draw boppers
+	static const struct Back_Week1_LowerBop
+	{
+		RECT src;
+		RECT_FIXED dst;
+	} lbop_piece[] = {
+		{{0, 78, 256, 154}, {FIXED_DEC(-422,1), FIXED_DEC(-276,1), FIXED_DEC(256 - 32,1), FIXED_DEC(154 - 32,1)}},
 	};
-	RECT curtainr_src = {122, 0, 134, 256};
-	RECT_FIXED curtainr_dst = {
-		FIXED_DEC(110,1) + FIXED_DEC(SCREEN_WIDEOADD,2) - fx,
-		FIXED_DEC(-150,1) - fy,
-		FIXED_DEC(134,1),
-		FIXED_DEC(256,1)
-	};
-	
-	Stage_DrawTex(&this->tex_back1, &curtainl_src, &curtainl_dst, stage.camera.bzoom);
-	Stage_DrawTex(&this->tex_back1, &curtainr_src, &curtainr_dst, stage.camera.bzoom);
-	
+
 	//Draw stage
-	fx = stage.camera.x * 3 / 2;
-	fy = stage.camera.y * 3 / 2;
+	fx = stage.camera.x; 
+	fy = stage.camera.y;
 	
-	POINT_FIXED stage_d2 = {
-		FIXED_DEC(-230,1) - fx,
-		FIXED_DEC(50,1) + FIXED_DEC(123,1) - fy,
-	};
-	POINT_FIXED stage_d3 = {
-		FIXED_DEC(-230,1) + FIXED_DEC(410,1) - fx,
-		FIXED_DEC(50,1) + FIXED_DEC(123,1) - fy,
-	};
+	FntPrint(" %d %d ", shit, ass);
 	
-	fx = stage.camera.x >> 1;
-	fy = stage.camera.y >> 1;
-	
-	POINT_FIXED stage_d0 = {
-		FIXED_DEC(-230,1) - fx,
-		FIXED_DEC(50,1) - fy,
-	};
-	POINT_FIXED stage_d1 = {
-		FIXED_DEC(-230,1) + FIXED_DEC(410,1) - fx,
-		FIXED_DEC(50,1) - fy,
-	};
-	
-	RECT stage_src = {0, 0, 255, 59};
-	
-	Stage_DrawTexArb(&this->tex_back0, &stage_src, &stage_d0, &stage_d1, &stage_d2, &stage_d3, stage.camera.bzoom);
-	
-	//Draw back
-	//fx = stage.camera.x * 2 / 3;
-	//fy = stage.camera.y * 2 / 3;
-	
-	RECT backl_src = {0, 59, 121, 105};
-	RECT_FIXED backl_dst = {
-		FIXED_DEC(-190,1) - fx,
-		FIXED_DEC(-100,1) - fy,
-		FIXED_DEC(121,1),
-		FIXED_DEC(105,1)
-	};
-	RECT backr_src = {121, 59, 136, 120};
-	RECT_FIXED backr_dst = {
-		FIXED_DEC(60,1) - fx,
-		FIXED_DEC(-110,1) - fy,
-		FIXED_DEC(136,1),
-		FIXED_DEC(120,1)
-	};
-	RECT backf_src = {0, 59, 1, 1};
-	RECT backf_dst = {
-		0,
-		0,
-		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
-	};
-	
-	Stage_DrawTex(&this->tex_back0, &backl_src, &backl_dst, stage.camera.bzoom);
-	Stage_DrawTex(&this->tex_back0, &backr_src, &backr_dst, stage.camera.bzoom);
-	Gfx_DrawTex(&this->tex_back0, &backf_src, &backf_dst);
+
+	RECT window_src = {0, 0, 72, 78};
+	RECT_FIXED window_dst = {FIXED_DEC(-447,1) - fx, FIXED_DEC(-301,1) - fy, FIXED_DEC(260,1), FIXED_DEC(163,1)};
+	Stage_BlendTex(&this->tex_back1, &window_src, &window_dst, stage.camera.bzoom, 1);
+
+	const struct Back_Week1_LowerBop *lbop_p = lbop_piece;
+	for (size_t i = 0; i < COUNT_OF(lbop_piece); i++, lbop_p++)
+	{
+		RECT_FIXED lbop_dst = {
+			lbop_p->dst.x - fx - (beat_bop << 1),
+			lbop_p->dst.y - fy + (beat_bop << 3),
+			lbop_p->dst.w + (beat_bop << 2),
+			lbop_p->dst.h - (beat_bop << 3),
+		};
+		Stage_DrawTex(&this->tex_back1, &lbop_p->src, &lbop_dst, stage.camera.bzoom);
+	}
+
+	RECT back_src = {0, 0, 256, 256};
+	RECT_FIXED back_dst = {FIXED_DEC(-496,1) - fx, FIXED_DEC(-356,1) - fy, FIXED_DEC(920,1), FIXED_DEC(540,1)};
+	Stage_DrawTex(&this->tex_back0, &back_src, &back_dst, stage.camera.bzoom);
 }
 
 void Back_Week1_Free(StageBack *back)

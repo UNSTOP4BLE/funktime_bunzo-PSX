@@ -26,7 +26,7 @@
 //Stage constants
 //#define STAGE_NOHUD //Disable the HUD
 
-#define STAGE_FREECAM //Freecam
+//#define STAGE_FREECAM //Freecam
 
 //normal note x
 static int note_x[8] = {
@@ -75,7 +75,7 @@ boolean opponentsing;
 static u32 Sounds[4];
 int soundcooldown;
 int drawshit;
-#define opponenty 120
+#define opponenty 140
 
 #include "character/bf.h"
 #include "character/dad.h"
@@ -122,6 +122,7 @@ static void Stage_FocusCharacter(Character *ch, fixed_t div)
 static void Stage_ScrollCamera(void)
 {
 	#ifdef STAGE_FREECAM
+		FntPrint("camx %d camy %d zoom %d", stage.camera.x / 1024, stage.camera.y / 1024, stage.camera.bzoom);
 		if (pad_state.held & PAD_LEFT)
 			stage.camera.x -= FIXED_DEC(2,1);
 		if (pad_state.held & PAD_UP)
@@ -1467,7 +1468,11 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	//Initialize camera
 	if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
 	{
-		Stage_FocusCharacter(stage.opponent, FIXED_UNIT);
+		stage.camera.tx = FIXED_DEC(-64,1);
+		stage.camera.ty = FIXED_DEC(-93,1);
+		stage.camera.tz = FIXED_DEC(5,10);
+		//not swap
+		//	Stage_FocusCharacter(stage.opponent, FIXED_UNIT);
 		if (stage.opponent2 != NULL)
 		Stage_FocusCharacter(stage.opponent2, FIXED_UNIT);
 	}
@@ -1938,7 +1943,13 @@ void Stage_Tick(void)
 			
 			//Scroll camera
 			if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
-				Stage_FocusCharacter(stage.opponent, FIXED_UNIT / 24);
+			{
+				stage.camera.tx = FIXED_DEC(-64,1);
+				stage.camera.ty = FIXED_DEC(-93,1);
+				stage.camera.tz = FIXED_DEC(5,10);
+				//not swap
+					//Stage_FocusCharacter(stage.opponent, FIXED_UNIT / 24);
+			}
 			else
 				Stage_FocusCharacter(stage.player, FIXED_UNIT / 24);
 			Stage_ScrollCamera();
@@ -1963,6 +1974,9 @@ void Stage_Tick(void)
 						//Opponent note hits
 						if (playing && (note->type & NOTE_FLAG_OPPONENT) && !(note->type & NOTE_FLAG_HIT))
 						{
+							if (stage.player_state[0].health > 2000)
+							stage.player_state[0].health -= 120;
+	
 							//Opponent hits note
 							Stage_StartVocal();
 							if (note->type & NOTE_FLAG_SUSTAIN)
@@ -2126,7 +2140,7 @@ void Stage_Tick(void)
 				);
 			}
 			
-			stage.opponent->y = FIXED_DEC(-stage.player_state[0].health / 120 - opponenty,1);
+			stage.opponent->y = FIXED_DEC(-stage.player_state[0].health / 100 - opponenty,1);
 
 			if (stage.mode < StageMode_2P)
 			{
