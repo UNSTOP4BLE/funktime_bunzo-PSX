@@ -25,6 +25,29 @@ typedef struct
 	Gfx_Tex tex_back1; //Curtains
 } Back_Week1;
 
+void Back_Week1_DrawMD(StageBack *back)
+{
+	Back_Week1 *this = (Back_Week1*)back;
+	
+	fixed_t fx, fy;
+	
+	fx = stage.camera.x; 
+	fy = stage.camera.y;
+
+	if (pad_state.held & PAD_UP)
+		ass ++;
+	if (pad_state.held & PAD_DOWN)
+		ass --;
+	if (pad_state.held & PAD_LEFT)
+		shit --;
+	if (pad_state.held & PAD_RIGHT)
+		shit ++;
+
+	RECT button_src = {115, 2, 125, 52};
+	RECT_FIXED button_dst = {FIXED_DEC(-273,1) - fx, FIXED_DEC(72,1) - fy, FIXED_DEC(438,1), FIXED_DEC(112,1)};
+	Stage_DrawTex(&this->tex_back1, &button_src, &button_dst, stage.camera.bzoom);
+}
+
 //Week 1 background functions
 void Back_Week1_DrawBG(StageBack *back)
 {
@@ -37,15 +60,6 @@ void Back_Week1_DrawBG(StageBack *back)
 		beat_bop = FIXED_UNIT - ((stage.note_scroll / 24) & FIXED_LAND);
 	else
 		beat_bop = 0;
-
-	if (pad_state.held & PAD_UP)
-		ass ++;
-	if (pad_state.held & PAD_DOWN)
-		ass --;
-	if (pad_state.held & PAD_LEFT)
-		shit --;
-	if (pad_state.held & PAD_RIGHT)
-		shit ++;
 
 	//Draw boppers
 	static const struct Back_Week1_LowerBop
@@ -101,7 +115,7 @@ StageBack *Back_Week1_New(void)
 	
 	//Set background functions
 	this->back.draw_fg = NULL;
-	this->back.draw_md = NULL;
+	this->back.draw_md = Back_Week1_DrawMD;
 	this->back.draw_bg = Back_Week1_DrawBG;
 	this->back.free = Back_Week1_Free;
 	

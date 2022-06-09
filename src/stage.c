@@ -75,7 +75,6 @@ boolean opponentsing;
 static u32 Sounds[4];
 int soundcooldown;
 int drawshit;
-#define opponenty 140
 
 #include "character/bf.h"
 #include "character/dad.h"
@@ -1974,9 +1973,10 @@ void Stage_Tick(void)
 						//Opponent note hits
 						if (playing && (note->type & NOTE_FLAG_OPPONENT) && !(note->type & NOTE_FLAG_HIT))
 						{
-							if (stage.player_state[0].health > 2000)
-							stage.player_state[0].health -= 120;
-	
+							if (stage.player_state[0].health > 2000 && stage.babymode == 0 && stage.mode != StageMode_2P)
+								stage.player_state[0].health -= 5;
+							
+
 							//Opponent hits note
 							Stage_StartVocal();
 							if (note->type & NOTE_FLAG_SUSTAIN)
@@ -2124,7 +2124,7 @@ void Stage_Tick(void)
 					if (this->accuracy != 0)
 						sprintf(this->accuracy_text, "Accuracy: %d%% %s", this->accuracy, this->rank);
 					else
-						strcpy(this->accuracy_text, "Accuracy: ?");
+						strcpy(this->accuracy_text, "Accuracy: ?");	
 					this->refresh_accuracy = false;
 				}
 				
@@ -2140,7 +2140,15 @@ void Stage_Tick(void)
 				);
 			}
 			
-			stage.opponent->y = FIXED_DEC(-stage.player_state[0].health / 100 - opponenty,1);
+			if (stage.mode != StageMode_2P)
+			{
+				if (stage.mode != StageMode_Swap)
+					stage.opponent->y = FIXED_DEC(-stage.player_state[0].health / 50 + (stage.stage_def->ochar.y / 1024),1);
+				else
+					stage.player->y = FIXED_DEC(((stage.player_state[0].health - 20000) / 50) + (stage.stage_def->ochar.y / 1024),1);
+			}		
+			else
+				stage.opponent->y = FIXED_DEC((-10000 / 50) + (stage.stage_def->ochar.y / 1024),1);
 
 			if (stage.mode < StageMode_2P)
 			{
@@ -2222,15 +2230,22 @@ void Stage_Tick(void)
 			//Tick foreground objects
 			ObjectList_Tick(&stage.objlist_fg);
 			
-			//Tick characters
-			stage.player->tick(stage.player);
-			stage.opponent->tick(stage.opponent);
-            if (stage.opponent2 != NULL)
-				stage.opponent2->tick(stage.opponent2);
-			
 			//Draw stage middle
 			if (stage.back->draw_md != NULL)
 				stage.back->draw_md(stage.back);
+
+			//Tick characters
+			if (stage.mode == StageMode_Swap) {
+				stage.opponent->tick(stage.opponent);
+				stage.player->tick(stage.player);
+			}	
+			else
+			{
+				stage.player->tick(stage.player);
+				stage.opponent->tick(stage.opponent);
+            }
+            if (stage.opponent2 != NULL)
+				stage.opponent2->tick(stage.opponent2);
 			
 			//Tick girlfriend
 			if (stage.gf != NULL)
