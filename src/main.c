@@ -93,6 +93,20 @@ int main(int argc, char **argv)
 			#endif
 		#endif
 		
+		//Set video mode depending on BIOS region
+		switch (stage.palmode)
+		{
+			case 1:
+				SetVideoMode(MODE_PAL);
+				SsSetTickMode(SS_TICK50);
+				stage.disp[0].screen.y = stage.disp[1].screen.y = 24;
+				break;
+			default:
+				SetVideoMode(MODE_NTSC);
+				SsSetTickMode(SS_TICK60);
+				stage.disp[0].screen.y = stage.disp[1].screen.y = 0;
+				break;
+		}
 		//Tick and draw game
 		Network_Process();
 		switch (gameloop)
