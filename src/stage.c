@@ -1467,16 +1467,26 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	//Initialize camera
 	if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
 	{
-		stage.camera.tx = FIXED_DEC(-64,1);
-		stage.camera.ty = FIXED_DEC(-93,1);
-		stage.camera.tz = FIXED_DEC(5,10);
-		//not swap
-		//	Stage_FocusCharacter(stage.opponent, FIXED_UNIT);
-		if (stage.opponent2 != NULL)
-		Stage_FocusCharacter(stage.opponent2, FIXED_UNIT);
+		if (stage.mode == StageMode_Swap)
+			Stage_FocusCharacter(stage.opponent, FIXED_UNIT);
+		else
+		{
+			stage.camera.tx = FIXED_DEC(-64,1);
+			stage.camera.ty = FIXED_DEC(-93,1);
+			stage.camera.tz = FIXED_DEC(5,10);
+		}
 	}
 	else
-		Stage_FocusCharacter(stage.player, FIXED_UNIT);
+	{
+		if (stage.mode == StageMode_Swap)
+		{
+			stage.camera.tx = FIXED_DEC(-64,1);
+			stage.camera.ty = FIXED_DEC(-93,1);
+			stage.camera.tz = FIXED_DEC(5,10);
+		}
+		else
+			Stage_FocusCharacter(stage.player, FIXED_UNIT);
+	}
 	stage.camera.x = stage.camera.tx;
 	stage.camera.y = stage.camera.ty;
 	stage.camera.zoom = stage.camera.tz;
@@ -1943,14 +1953,26 @@ void Stage_Tick(void)
 			//Scroll camera
 			if (stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
 			{
-				stage.camera.tx = FIXED_DEC(-64,1);
-				stage.camera.ty = FIXED_DEC(-93,1);
-				stage.camera.tz = FIXED_DEC(5,10);
-				//not swap
-					//Stage_FocusCharacter(stage.opponent, FIXED_UNIT / 24);
+				if (stage.mode == StageMode_Swap)
+					Stage_FocusCharacter(stage.opponent, FIXED_UNIT / 24);
+				else
+				{
+					stage.camera.tx = FIXED_DEC(-64,1);
+					stage.camera.ty = FIXED_DEC(-93,1);
+					stage.camera.tz = FIXED_DEC(5,10);
+				}
 			}
 			else
-				Stage_FocusCharacter(stage.player, FIXED_UNIT / 24);
+			{
+				if (stage.mode == StageMode_Swap)
+				{
+					stage.camera.tx = FIXED_DEC(-64,1);
+					stage.camera.ty = FIXED_DEC(-93,1);
+					stage.camera.tz = FIXED_DEC(5,10);
+				}
+				else
+					Stage_FocusCharacter(stage.player, FIXED_UNIT / 24);
+			}	
 			Stage_ScrollCamera();
 			
 			switch (stage.mode)
