@@ -1366,8 +1366,8 @@ static void Stage_LoadMusic(void)
 	Audio_SeekXA_Track(stage.stage_def->music_track);
 	
 	//Initialize music state
-	stage.note_scroll = FIXED_DEC(-5 * 4 * 12,1);
-	stage.song_time = FIXED_DIV(stage.note_scroll, stage.step_crochet) - FIXED_DEC(1,1);
+	stage.note_scroll = FIXED_DEC(-5 * 6 * 12,1);
+	stage.song_time = FIXED_DIV(stage.note_scroll, stage.step_crochet);
 	stage.interp_time = 0;
 	stage.interp_ms = 0;
 	stage.interp_speed = 0;

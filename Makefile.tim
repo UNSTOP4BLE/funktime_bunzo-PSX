@@ -11,7 +11,8 @@ all: \
 	iso/dad/main.arc \
 	iso/gf/main.arc \
 	iso/gf/speaker.tim \
-	iso/week1/back.arc 
+	iso/week1/back.arc \
+	iso/week1/screen.arc 
 
 iso/%.tim: iso/%.png
 	tools/funkintimconv/funkintimconv $@ $<
@@ -34,3 +35,4 @@ iso/gf/main.arc: iso/gf/gf0.tim iso/gf/gf1.tim iso/gf/gf2.tim
 
 # Week 1
 iso/week1/back.arc: iso/week1/back0.tim iso/week1/back1.tim
+iso/week1/screen.arc: iso/week1/win0.tim iso/week1/win1.tim iso/week1/win2.tim
