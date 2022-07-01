@@ -39,6 +39,11 @@
 				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
 				<file name = "hud1.tim" type = "data" source = "iso/stage/hud1.tim"/>
 			</dir>
+
+			<dir name = "bf">
+				<file name = "sc0.tim" type = "data" source = "iso/bf/sc0.tim"/>
+				<file name = "sc1.tim" type = "data" source = "iso/bf/sc1.tim"/>
+			</dir>
 			
 			<!-- Week 1 assets -->
 			<dir name = "week1">

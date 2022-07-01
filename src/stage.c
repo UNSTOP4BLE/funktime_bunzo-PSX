@@ -22,6 +22,7 @@
 #include "object/combo.h"
 #include "object/splash.h"
 
+#include "deadsc.h"
 //Stage constants
 //#define STAGE_NOHUD //Disable the HUD
 
@@ -1412,6 +1413,7 @@ static void Stage_LoadState(void)
 		stage.player_state[i].refresh_score = false;
 		stage.player_state[i].score = 0;
 		strcpy(stage.player_state[i].score_text, "Score: 0");
+		DeadSc_Init();
 		
 		stage.player_state[i].pad_held = stage.player_state[i].pad_press = 0;
 	}
@@ -1439,6 +1441,12 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	{
 		Gfx_LoadTex(&stage.tex_hud0, IO_Read("\\STAGE\\HUD0.TIM;1"), GFX_LOADTEX_FREE);
 		Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\HUD1.TIM;1"), GFX_LOADTEX_FREE);
+	}
+
+	if (stage.stage_id == StageId_1_1)
+	{
+		Gfx_LoadTex(&deadsc_tex.sc0, IO_Read("\\BF\\SC0.TIM;1"), GFX_LOADTEX_FREE);
+		Gfx_LoadTex(&deadsc_tex.sc1, IO_Read("\\BF\\SC1.TIM;1"), GFX_LOADTEX_FREE);
 	}
 	//Load stage background
 	Stage_LoadStage();
@@ -1687,6 +1695,7 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{   
+			DeadSc_Play(8);
             //check if the stage has 2 opponents
 			if (has2opponents == 0)
 			{

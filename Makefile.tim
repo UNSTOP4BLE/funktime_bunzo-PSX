@@ -8,6 +8,8 @@ all: \
 	iso/stage/hud1.tim \
 	iso/bf/main.arc \
 	iso/bf/dead.arc \
+	iso/bf/sc0.tim \
+	iso/bf/sc1.tim \
 	iso/dad/main.arc \
 	iso/gf/main.arc \
 	iso/gf/speaker.tim \
