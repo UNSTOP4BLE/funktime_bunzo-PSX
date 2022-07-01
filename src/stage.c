@@ -12,7 +12,6 @@
 #include "pad.h"
 #include "main.h"
 #include "random.h"
-#include "movie.h"
 #include "network.h"
 #include "mutil.h"
 
@@ -57,10 +56,10 @@ static int note_y[8] = {
 
 static const u16 note_key[] = {INPUT_LEFT, INPUT_DOWN, INPUT_UP, INPUT_RIGHT};
 static const u8 note_anims[4][3] = {
-	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_LeftMiss},
-	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_DownMiss},
-	{CharAnim_Up,    CharAnim_UpAlt,    PlayerAnim_UpMiss},
-	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_RightMiss},
+	{CharAnim_Left,  CharAnim_LeftAlt,  PlayerAnim_MissL},
+	{CharAnim_Down,  CharAnim_DownAlt,  PlayerAnim_MissL},
+	{CharAnim_Up,    CharAnim_UpAlt,    PlayerAnim_MissR},
+	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_MissR},
 };
 
 
@@ -288,8 +287,10 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	return hit_type;
 }
 
-static void Stage_MissNote(PlayerState *this)
+static void Stage_MissNote(PlayerState *this, u8 type)
 {
+	if (type != 9 && stage.mode != StageMode_Swap && !NOTE_FLAG_OPPONENT)
+		this->character->set_anim(this->character, note_anims[type & 0x3][2]);
 	this->max_accuracy += 10;
 	this->refresh_accuracy = true;
 	this->miss += 1;
@@ -390,7 +391,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			this->character->set_anim(this->character, note_anims[type & 0x3][2]);
 		else
 			this->character->set_anim(this->character, note_anims[type & 0x3][0]);
-		Stage_MissNote(this);
+		Stage_MissNote(this, 9);
 		
 		this->health -= 400;
 		this->score -= 1;
@@ -939,7 +940,7 @@ static void Stage_DrawNotes(void)
 				{
 					//Missed note
 					Stage_CutVocal();
-					Stage_MissNote(this);
+					Stage_MissNote(this, RandomRange(0, 3));
 					this->health -= 475;
 					
 				}

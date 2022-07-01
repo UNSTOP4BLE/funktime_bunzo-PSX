@@ -24,7 +24,7 @@ iso/%.arc:
 iso/menu/menu.arc: iso/menu/back.tim iso/menu/ng.tim iso/menu/story.tim iso/menu/title.tim
 
 # BF
-iso/bf/main.arc: iso/bf/idle.tim iso/bf/left0.tim iso/bf/left1.tim iso/bf/down0.tim iso/bf/down1.tim iso/bf/up0.tim iso/bf/up1.tim iso/bf/right0.tim iso/bf/right1.tim 
+iso/bf/main.arc: iso/bf/idle.tim iso/bf/left0.tim iso/bf/left1.tim iso/bf/down0.tim iso/bf/down1.tim iso/bf/up0.tim iso/bf/up1.tim iso/bf/right0.tim iso/bf/right1.tim iso/bf/miss0.tim iso/bf/miss1.tim iso/bf/miss2.tim  
 iso/bf/dead.arc: iso/bf/dead1.tim iso/bf/dead2.tim iso/bf/retry.tim
 
 # Dad

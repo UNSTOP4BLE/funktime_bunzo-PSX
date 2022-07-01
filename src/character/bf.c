@@ -12,8 +12,6 @@
 #include "../random.h"
 #include "../main.h"
 
-int secret;
-
 //Boyfriend skull fragments
 static SkullFragment char_bf_skull[15] = {
 	{ 1 * 8, -87 * 8, -13, -13},
@@ -48,6 +46,9 @@ enum
 	BF_ArcMain_Up1,
 	BF_ArcMain_Right0,
 	BF_ArcMain_Right1,
+	BF_ArcMain_Miss0,
+	BF_ArcMain_Miss1,
+	BF_ArcMain_Miss2,
 	BF_ArcMain_Dead0, //BREAK
 	
 	BF_ArcMain_Max,
@@ -110,9 +111,21 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_Right1, {0,   0,  235, 103}, { 51, 101}}, //11 right 1
 	{BF_ArcMain_Right1, {0, 103,  159, 103}, { 51, 101}}, //12 right 2
 
-	{BF_ArcMain_Idle, {  0,   0,  93, 108}, { 52, 101}}, //20 left miss 1
-	{BF_ArcMain_Idle, { 94,   0,  93, 108}, { 52, 101}}, //21 left miss 2
+	{BF_ArcMain_Miss0, {  0,   0, 128, 103}, { 63, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss0, {128,   0, 128, 103}, { 63, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss0, {  0, 103, 128, 103}, { 64, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss0, {128, 103, 128, 103}, { 63, 101}}, //20 left miss 1
 
+	{BF_ArcMain_Miss1, {  0,   0, 129, 103}, { 63, 101}}, //20 left miss 1
+	//{BF_ArcMain_Miss1, {129,   0, 127, 103}, { 52, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss1, {  0, 103, 128, 103}, { 62, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss1, {128, 103, 128, 103}, { 63, 101}}, //20 left miss 1
+
+	{BF_ArcMain_Miss2, {  0,   0, 129, 103}, { 63, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss2, {129,   0, 127, 103}, { 61, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss2, {  0, 103, 129, 103}, { 63, 101}}, //20 left miss 1
+
+	/*
 	{BF_ArcMain_Dead0, {  0,   0, 128, 128}, { 53,  98}}, //23 dead0 0
 	{BF_ArcMain_Dead0, {128,   0, 128, 128}, { 53,  98}}, //24 dead0 1
 	{BF_ArcMain_Dead0, {  0, 128, 128, 128}, { 53,  98}}, //25 dead0 2
@@ -126,7 +139,7 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcDead_Dead2, {  0,   0, 128, 128}, { 53,  98}}, //31 dead2 body twitch 0
 	{BF_ArcDead_Dead2, {128,   0, 128, 128}, { 53,  98}}, //32 dead2 body twitch 1
 	{BF_ArcDead_Dead2, {  0, 128, 128, 128}, { 53,  98}}, //33 dead2 balls twitch 0
-	{BF_ArcDead_Dead2, {128, 128, 128, 128}, { 53,  98}}, //34 dead2 balls twitch 1
+	{BF_ArcDead_Dead2, {128, 128, 128, 128}, { 53,  98}}, //34 dead2 balls twitch 1*/
 };
 
 static const Animation char_bf_anim[PlayerAnim_Max] = {
@@ -140,14 +153,9 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{2, (const u8[]){ 16, 17, 18, 19, ASCR_BACK, 0}},             //CharAnim_Right
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},       //CharAnim_RightAlt
 	
-	{1, (const u8[]){ 5, 20, 20, 21, ASCR_BACK, 1}},     //PlayerAnim_LeftMiss
-	{1, (const u8[]){ 7, 22, 22, 23, ASCR_BACK, 1}},     //PlayerAnim_DownMiss
-	{1, (const u8[]){ 9, 24, 24, 25, ASCR_BACK, 1}},     //PlayerAnim_UpMiss
-	{1, (const u8[]){11, 26, 26, 27, ASCR_BACK, 1}},     //PlayerAnim_RightMiss
-	
-	{2, (const u8[]){13, 14, 15, ASCR_BACK, 1}},         //PlayerAnim_Peace
-	{2, (const u8[]){16, 17, 18, 19, ASCR_REPEAT}},      //PlayerAnim_Sweat
-	
+	{2, (const u8[]){ 20, 21, 22, 23, 24, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
+	{2, (const u8[]){ 25, 26, 27, 28, 29, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
+
 	{5, (const u8[]){28, 29, 30, 31, 31, 31, 31, 31, 31, 31, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
 	{5, (const u8[]){31, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
 	{3, (const u8[]){32, 33, 34, 35, 35, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
@@ -178,17 +186,6 @@ void Char_BF_Tick(Character *character)
 {
 	Char_BF *this = (Char_BF*)character;
 	
-	//Secret icon
-	if (secret)
-		this->character.health_i = 9;
-	else
-		this->character.health_i = 0;
-
-	if (pad_state.press & PAD_SELECT)
-		secret ++;
-	
-	if (secret == 2)
-		secret = 0;
 	//Handle animation updates
 	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0 ||
 	    (character->animatable.anim != CharAnim_Left &&
@@ -207,16 +204,14 @@ void Char_BF_Tick(Character *character)
 		if (Animatable_Ended(&character->animatable) &&
 			(character->animatable.anim != CharAnim_Left &&
 		     character->animatable.anim != CharAnim_LeftAlt &&
-		     character->animatable.anim != PlayerAnim_LeftMiss &&
 		     character->animatable.anim != CharAnim_Down &&
 		     character->animatable.anim != CharAnim_DownAlt &&
-		     character->animatable.anim != PlayerAnim_DownMiss &&
 		     character->animatable.anim != CharAnim_Up &&
 		     character->animatable.anim != CharAnim_UpAlt &&
-		     character->animatable.anim != PlayerAnim_UpMiss &&
 		     character->animatable.anim != CharAnim_Right &&
 		     character->animatable.anim != CharAnim_RightAlt &&
-		     character->animatable.anim != PlayerAnim_RightMiss) &&
+		     character->animatable.anim != PlayerAnim_MissL &&
+		     character->animatable.anim != PlayerAnim_MissR) &&
 			(stage.song_step & 0x7) == 0)
 			character->set_anim(character, CharAnim_Idle);
 	}
@@ -417,6 +412,9 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 		"up1.tim",    //Dad_ArcMain_Up
 		"right0.tim", //Dad_ArcMain_Right
 		"right1.tim", //Dad_ArcMain_Right
+		"miss0.tim", //Dad_ArcMain_Miss
+		"miss1.tim", //Dad_ArcMain_Miss
+		"miss2.tim", //Dad_ArcMain_Miss
 		NULL
 	};
 	IO_Data *arc_ptr = this->arc_ptr;
