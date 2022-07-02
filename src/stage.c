@@ -1695,7 +1695,7 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{   
-			DeadSc_Play(8);
+			//DeadSc_Play(8);
             //check if the stage has 2 opponents
 			if (has2opponents == 0)
 			{

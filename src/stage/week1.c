@@ -12,9 +12,6 @@
 
 int windowanim;
 
-#include "../pad.h"
-
-int shit, ass;
 //Week 1 background structure
 typedef struct
 {
@@ -87,15 +84,6 @@ void Back_Week1_DrawMD(StageBack *back)
 	fx = stage.camera.x; 
 	fy = stage.camera.y;
 
-	if (pad_state.held & PAD_UP)
-		ass ++;
-	if (pad_state.held & PAD_DOWN)
-		ass --;
-	if (pad_state.held & PAD_LEFT)
-		shit --;
-	if (pad_state.held & PAD_RIGHT)
-		shit ++;
-
 	RECT button_src = {115, 2, 125, 52};
 	RECT_FIXED button_dst = {FIXED_DEC(-273,1) - fx, FIXED_DEC(72,1) - fy, FIXED_DEC(438,1), FIXED_DEC(112,1)};
 	Stage_DrawTex(&this->tex_back1, &button_src, &button_dst, stage.camera.bzoom);
@@ -127,9 +115,6 @@ void Back_Week1_DrawBG(StageBack *back)
 	fx = stage.camera.x; 
 	fy = stage.camera.y;
 	
-	FntPrint(" %d %d ", shit, ass);
-	
-
 	RECT window_src = {0, 0, 72, 78};
 	RECT_FIXED window_dst = {FIXED_DEC(-447,1) - fx, FIXED_DEC(-301,1) - fy, FIXED_DEC(260,1), FIXED_DEC(163,1)};
 	Stage_BlendTex(&this->tex_back1, &window_src, &window_dst, stage.camera.bzoom, 1);
@@ -163,25 +148,27 @@ void Back_Week1_DrawBG(StageBack *back)
 		default:
 			break;
 	}
-	switch (windowanim)
+	if (stage.song_step >= 95)
 	{
-		case 1:
-			Animatable_SetAnim(&this->screen_animatable, 1); 
-			break;
-		case 2:
-			Animatable_SetAnim(&this->screen_animatable, 2); 
-			break;
-		case 3:
-			Animatable_SetAnim(&this->screen_animatable, 3); 
-			break;
-		case 4:
-			Animatable_SetAnim(&this->screen_animatable, 4); 
-			break;
-		default:
-			Animatable_SetAnim(&this->screen_animatable, 0); 
-			break;
-	}
-		
+		switch (windowanim)
+		{
+			case 1:
+				Animatable_SetAnim(&this->screen_animatable, 1); 
+				break;
+			case 2:
+				Animatable_SetAnim(&this->screen_animatable, 2); 
+				break;
+			case 3:
+				Animatable_SetAnim(&this->screen_animatable, 3); 
+				break;
+			case 4:
+				Animatable_SetAnim(&this->screen_animatable, 4); 
+				break;
+			default:
+				Animatable_SetAnim(&this->screen_animatable, 0); 
+				break;
+		}
+	}	
 	if (stage.song_step < 0)
 		windowanim = 0;
 

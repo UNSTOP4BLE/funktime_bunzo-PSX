@@ -111,7 +111,7 @@ void Char_Dad_Tick(Character *character)
 	
 
 	
-	FntPrint("y%d", this->character.y);
+	FntPrint("y%d", stage.song_step);
 	//Perform idle dance
 	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0)
 		Character_PerformIdle(character);
