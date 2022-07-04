@@ -54,15 +54,6 @@ enum
 	BF_ArcMain_Max,
 };
 
-enum
-{
-	BF_ArcDead_Dead1, //Mic Drop
-	BF_ArcDead_Dead2, //Twitch
-	BF_ArcDead_Retry, //Retry prompt
-	
-	BF_ArcDead_Max,
-};
-
 #define BF_Arc_Max BF_ArcMain_Max
 
 typedef struct
@@ -71,8 +62,7 @@ typedef struct
 	Character character;
 	
 	//Render data and state
-	IO_Data arc_main, arc_dead;
-	CdlFILE file_dead_arc; //dead.arc file position
+	IO_Data arc_main;
 	IO_Data arc_ptr[BF_Arc_Max];
 	
 	Gfx_Tex tex, tex_retry;
@@ -125,21 +115,10 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_Miss2, {129,   0, 127, 103}, { 61, 101}}, //20 left miss 1
 	{BF_ArcMain_Miss2, {  0, 103, 129, 103}, { 63, 101}}, //20 left miss 1
 
-	/*
 	{BF_ArcMain_Dead0, {  0,   0, 128, 128}, { 53,  98}}, //23 dead0 0
 	{BF_ArcMain_Dead0, {128,   0, 128, 128}, { 53,  98}}, //24 dead0 1
 	{BF_ArcMain_Dead0, {  0, 128, 128, 128}, { 53,  98}}, //25 dead0 2
 	{BF_ArcMain_Dead0, {128, 128, 128, 128}, { 53,  98}}, //26 dead0 3
-	
-	{BF_ArcDead_Dead1, {  0,   0, 128, 128}, { 53,  98}}, //27 dead1 0
-	{BF_ArcDead_Dead1, {128,   0, 128, 128}, { 53,  98}}, //28 dead1 1
-	{BF_ArcDead_Dead1, {  0, 128, 128, 128}, { 53,  98}}, //29 dead1 2
-	{BF_ArcDead_Dead1, {128, 128, 128, 128}, { 53,  98}}, //30 dead1 3
-	
-	{BF_ArcDead_Dead2, {  0,   0, 128, 128}, { 53,  98}}, //31 dead2 body twitch 0
-	{BF_ArcDead_Dead2, {128,   0, 128, 128}, { 53,  98}}, //32 dead2 body twitch 1
-	{BF_ArcDead_Dead2, {  0, 128, 128, 128}, { 53,  98}}, //33 dead2 balls twitch 0
-	{BF_ArcDead_Dead2, {128, 128, 128, 128}, { 53,  98}}, //34 dead2 balls twitch 1*/
 };
 
 static const Animation char_bf_anim[PlayerAnim_Max] = {
@@ -156,6 +135,7 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{2, (const u8[]){ 20, 21, 22, 23, 24, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
 	{2, (const u8[]){ 25, 26, 27, 28, 29, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
 
+/*
 	{5, (const u8[]){28, 29, 30, 31, 31, 31, 31, 31, 31, 31, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
 	{5, (const u8[]){31, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
 	{3, (const u8[]){32, 33, 34, 35, 35, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
@@ -164,7 +144,7 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{3, (const u8[]){38, 39, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
 	
 	{10, (const u8[]){35, 35, 35, ASCR_BACK, 1}}, //PlayerAnim_Dead4
-	{ 3, (const u8[]){38, 39, 35, ASCR_REPEAT}},  //PlayerAnim_Dead5
+	{ 3, (const u8[]){38, 39, 35, ASCR_REPEAT}},  //PlayerAnim_Dead5 */
 };
 
 //Boyfriend player functions
@@ -330,30 +310,13 @@ void Char_BF_SetAnim(Character *character, u8 anim)
 	{
 		case PlayerAnim_Dead0:
 			//Begin reading dead.arc and adjust focus
-			this->arc_dead = IO_AsyncReadFile(&this->file_dead_arc);
 			character->focus_x = FIXED_DEC(0,1);
 			character->focus_y = FIXED_DEC(-40,1);
 			character->focus_zoom = FIXED_DEC(125,100);
 			break;
 		case PlayerAnim_Dead2:
-			//Unload main.arc
-			Mem_Free(this->arc_main);
-			this->arc_main = this->arc_dead;
-			this->arc_dead = NULL;
-			
-			//Find dead.arc files
-			const char **pathp = (const char *[]){
-				"dead1.tim", //BF_ArcDead_Dead1
-				"dead2.tim", //BF_ArcDead_Dead2
-				"retry.tim", //BF_ArcDead_Retry
-				NULL
-			};
-			IO_Data *arc_ptr = this->arc_ptr;
-			for (; *pathp != NULL; pathp++)
-				*arc_ptr++ = Archive_Find(this->arc_main, *pathp);
-			
 			//Load retry art
-			Gfx_LoadTex(&this->tex_retry, this->arc_ptr[BF_ArcDead_Retry], 0);
+			//Gfx_LoadTex(&this->tex_retry, this->arc_ptr[BF_ArcDead_Retry], 0);
 			break;
 	}
 	
@@ -368,7 +331,6 @@ void Char_BF_Free(Character *character)
 	
 	//Free art
 	Mem_Free(this->arc_main);
-	Mem_Free(this->arc_dead);
 }
 
 Character *Char_BF_New(fixed_t x, fixed_t y)
@@ -399,9 +361,7 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	
 	//Load art
 	this->arc_main = IO_Read("\\CHAR\\BF.ARC;1");
-	this->arc_dead = NULL;
-	IO_FindFile(&this->file_dead_arc, "\\CHAR\\BFDEAD.ARC;1");
-	
+
 	const char **pathp = (const char *[]){
 		"idle.tim",   //Dad_ArcMain_Idle0
 		"left0.tim",  //Dad_ArcMain_Left
@@ -426,18 +386,6 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	
 	//Initialize player state
 	this->retry_bump = 0;
-	
-	//Copy skull fragments
-	memcpy(this->skull, char_bf_skull, sizeof(char_bf_skull));
-	this->skull_scale = 64;
-	
-	SkullFragment *frag = this->skull;
-	for (size_t i = 0; i < COUNT_OF_MEMBER(Char_BF, skull); i++, frag++)
-	{
-		//Randomize trajectory
-		frag->xsp += RandomRange(-4, 4);
-		frag->ysp += RandomRange(-2, 2);
-	}
-	
+
 	return (Character*)this;
 }

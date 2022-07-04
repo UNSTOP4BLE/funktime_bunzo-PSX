@@ -8,6 +8,7 @@
 
 int anim;
 int animspeed;
+int dedtimer;
 
 DeadSc_Tex deadsc_tex;
 
@@ -27,6 +28,7 @@ DedFrame realframe;
 
 void DeadSc_Init()
 {
+	dedtimer = 0;
 	anim = 0;
 	animspeed = 0;
 	realframe = frame0;
@@ -35,6 +37,8 @@ void DeadSc_Init()
 void DeadSc_Play(int animcooldown)
 {
 	animspeed ++;
+	FntPrint("%d", dedtimer);
+	dedtimer ++;
 	if (animspeed >= animcooldown)
 	{
 		anim ++;

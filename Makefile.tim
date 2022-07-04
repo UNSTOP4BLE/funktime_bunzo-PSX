@@ -6,6 +6,7 @@ all: \
 	iso/font/cdr.tim \
 	iso/stage/hud0.tim \
 	iso/stage/hud1.tim \
+	iso/stage/screen.tim \
 	iso/bf/main.arc \
 	iso/bf/dead.arc \
 	iso/bf/sc0.tim \

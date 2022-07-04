@@ -38,6 +38,7 @@
 			<dir name = "stage">
 				<file name = "hud0.tim" type = "data" source = "iso/stage/hud0.tim"/>
 				<file name = "hud1.tim" type = "data" source = "iso/stage/hud1.tim"/>
+				<file name = "screen.tim" type = "data" source = "iso/stage/screen.tim"/>
 			</dir>
 
 			<dir name = "bf">
@@ -78,6 +79,8 @@
 
 			<!-- Sound effect -->
 			<dir name = "sounds">
+				<file name = "cymbal.vag" type = "data" source = "iso/sounds/cymbal.vag"/>
+
 				<!-- Menu Sounds -->
 				<file name = "scroll.vag" type = "data" source = "iso/sounds/scroll.vag"/>
 				<file name = "confirm.vag" type = "data" source = "iso/sounds/confirm.vag"/>

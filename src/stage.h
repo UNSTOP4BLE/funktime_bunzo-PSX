@@ -191,7 +191,7 @@ typedef struct
 	u32 offset;
 	
 	//HUD textures
-	Gfx_Tex tex_hud0, tex_hud1;
+	Gfx_Tex tex_hud0, tex_hud1, tex_screen;
 	
 	//Stage data
 	const StageDef *stage_def;

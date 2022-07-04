@@ -26,7 +26,7 @@
 //Stage constants
 //#define STAGE_NOHUD //Disable the HUD
 
-//#define STAGE_FREECAM //Freecam
+#define STAGE_FREECAM //Freecam
 
 //normal note x
 static int note_x[8] = {
@@ -288,10 +288,8 @@ static u8 Stage_HitNote(PlayerState *this, u8 type, fixed_t offset)
 	return hit_type;
 }
 
-static void Stage_MissNote(PlayerState *this, u8 type)
+static void Stage_MissNote(PlayerState *this)
 {
-	if (type != 9 && stage.mode != StageMode_Swap && !NOTE_FLAG_OPPONENT)
-		this->character->set_anim(this->character, note_anims[type & 0x3][2]);
 	this->max_accuracy += 10;
 	this->refresh_accuracy = true;
 	this->miss += 1;
@@ -392,7 +390,7 @@ static void Stage_NoteCheck(PlayerState *this, u8 type)
 			this->character->set_anim(this->character, note_anims[type & 0x3][2]);
 		else
 			this->character->set_anim(this->character, note_anims[type & 0x3][0]);
-		Stage_MissNote(this, 9);
+		Stage_MissNote(this);
 		
 		this->health -= 400;
 		this->score -= 1;
@@ -941,8 +939,10 @@ static void Stage_DrawNotes(void)
 				{
 					//Missed note
 					Stage_CutVocal();
-					Stage_MissNote(this, RandomRange(0, 3));
+					Stage_MissNote(this);
 					this->health -= 475;
+					if (!(stage.cur_note->type & NOTE_FLAG_OPPONENT) && stage.mode != StageMode_Swap)
+					    stage.player->set_anim(stage.player, note_anims[RandomRange(0, 3) & 0x3][2]);
 					
 				}
 			}
@@ -1447,6 +1447,7 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 	{
 		Gfx_LoadTex(&deadsc_tex.sc0, IO_Read("\\BF\\SC0.TIM;1"), GFX_LOADTEX_FREE);
 		Gfx_LoadTex(&deadsc_tex.sc1, IO_Read("\\BF\\SC1.TIM;1"), GFX_LOADTEX_FREE);
+		Gfx_LoadTex(&stage.tex_screen, IO_Read("\\STAGE\\SCREEN.TIM;1"), GFX_LOADTEX_FREE);
 	}
 	//Load stage background
 	Stage_LoadStage();
@@ -1695,7 +1696,11 @@ void Stage_Tick(void)
 	{
 		case StageState_Play:
 		{   
-			//DeadSc_Play(8);
+
+			RECT pipe_src = {18, 0, 237, 255};
+			RECT pipe_dst = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+
+
             //check if the stage has 2 opponents
 			if (has2opponents == 0)
 			{
@@ -2006,7 +2011,7 @@ void Stage_Tick(void)
 						if (playing && (note->type & NOTE_FLAG_OPPONENT) && !(note->type & NOTE_FLAG_HIT))
 						{
 							if (stage.player_state[0].health > 2000 && stage.babymode == 0 && stage.mode != StageMode_2P)
-								stage.player_state[0].health -= 5;
+								stage.player_state[0].health -= 45;
 							
 
 							//Opponent hits note
@@ -2231,34 +2236,13 @@ void Stage_Tick(void)
 			*/	
 			}
 			
-			//Hardcoded stage stuff
-			switch (stage.stage_id)
-			{
-				case StageId_1_2: //Fresh GF bop
-					switch (stage.song_step)
-					{
-						case 16 << 2:
-							stage.gf_speed = 2 << 2;
-							break;
-						case 48 << 2:
-							stage.gf_speed = 1 << 2;
-							break;
-						case 80 << 2:
-							stage.gf_speed = 2 << 2;
-							break;
-						case 112 << 2:
-							stage.gf_speed = 1 << 2;
-							break;
-					}
-					break;
-				default:
-					break;
-			}
-			
 			//Draw stage foreground
 			if (stage.back->draw_fg != NULL)
 				stage.back->draw_fg(stage.back);
 			
+			if ((stage.mode == StageMode_Swap) ? !(stage.cur_section->flag & SECTION_FLAG_OPPFOCUS) : stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
+				Gfx_BlendTex(&stage.tex_screen, &pipe_src, &pipe_dst, 1);
+
 			//Tick foreground objects
 			ObjectList_Tick(&stage.objlist_fg);
 			
@@ -2295,6 +2279,7 @@ void Stage_Tick(void)
 		{
 			//Stop music immediately
 			Audio_StopXA();
+			Audio_PlayXA_Track(XA_GameOver, 0x40, 1, true);
 			
 			//Unload stage data
 			Mem_Free(stage.chart_data);
@@ -2335,6 +2320,7 @@ void Stage_Tick(void)
 	//Fallthrough
 		case StageState_DeadLoad:
 		{
+			DeadSc_Play(8);
 			//Scroll camera and tick player
 			if (stage.song_time < FIXED_UNIT)
 				stage.song_time += FIXED_UNIT / 60;
@@ -2362,7 +2348,7 @@ void Stage_Tick(void)
 			if (stage.player->animatable.anim == PlayerAnim_Dead3)
 			{
 				stage.state = StageState_DeadRetry;
-				Audio_PlayXA_Track(XA_GameOver, 0x40, 1, true);
+				
 			}
 			break;
 		}
