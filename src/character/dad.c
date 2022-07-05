@@ -83,7 +83,7 @@ static const CharFrame char_dad_frame[] = {
 };
 
 static const Animation char_dad_anim[CharAnim_Max] = {
-	{2, (const u8[]){ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ASCR_BACK, 0}}, //CharAnim_Idle
+	{3, (const u8[]){ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ASCR_BACK, 0}}, //CharAnim_Idle
 	{2, (const u8[]){ 10, 11, 12, ASCR_BACK, 0}},         //CharAnim_Left
 	{0, (const u8[]){ASCR_CHGANI, CharAnim_Idle}},   //CharAnim_LeftAlt
 	{2, (const u8[]){ 13, 14, 15, ASCR_BACK, 0}},         //CharAnim_Down
@@ -112,34 +112,23 @@ void Char_Dad_SetFrame(void *user, u8 frame)
 void Char_Dad_Tick(Character *character)
 {
 	Char_Dad *this = (Char_Dad*)character;
-	
-	/*
-	if (stage.opponent->animatable.anim == CharAnim_Idle)
-	{
-		if (stage.flag & STAGE_FLAG_JUST_STEP && stage.song_step > 0)
-		{
-			if ((stage.song_step & 0x8) == 0)
-				soundcooldown ++;
-		}
-		
-	}
-	else
-		soundcooldown = 0;
-	FntPrint("%d", soundcooldown);
-	*/
 
-	FntPrint("animshit%d", character->animatable.anim_p);
-	if (char_dad_anim[0].script == char_dad_anim[0].script[0])
+	if (this->frame == 0)
+		soundcooldown ++;
+	
+	if (soundcooldown == 8 || pad_state.press & PAD_CROSS)
+	{
 		Audio_PlaySound(Sounds[0]);
+		soundcooldown = 0;
+	}
 
 	RECT pipe_src = {0, 0, 18, 256};
 	RECT_FIXED pipe_dst = {this->character.x + FIXED_DEC(59,1) - stage.camera.x, this->character.y - FIXED_DEC(340,1) - stage.camera.y, FIXED_DEC(18,1), FIXED_DEC(373,1)};
 
-	FntPrint("y%d", stage.song_step);
 	//Perform idle dance
 	if ((character->pad_held & (INPUT_LEFT | INPUT_DOWN | INPUT_UP | INPUT_RIGHT)) == 0)
 		Character_PerformIdle(character);
-	
+
 	//Animate and draw
 	Animatable_Animate(&character->animatable, (void*)this, Char_Dad_SetFrame);
 	Character_Draw(character, &this->tex, &char_dad_frame[this->frame]);
