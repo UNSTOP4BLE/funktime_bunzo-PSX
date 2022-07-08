@@ -12,6 +12,7 @@ all: \
 	iso/bf/sc0.tim \
 	iso/bf/sc1.tim \
 	iso/dad/main.arc \
+	iso/dad/bunzom.arc \
 	iso/gf/main.arc \
 	iso/gf/speaker.tim \
 	iso/week1/back.arc \
@@ -32,6 +33,8 @@ iso/bf/dead.arc: iso/bf/dead1.tim iso/bf/dead2.tim iso/bf/retry.tim
 
 # Dad
 iso/dad/main.arc: iso/dad/idle0.tim iso/dad/idle1.tim iso/dad/idle2.tim iso/dad/idle3.tim iso/dad/idle4.tim iso/dad/left0.tim iso/dad/left1.tim iso/dad/left2.tim iso/dad/down0.tim iso/dad/down1.tim iso/dad/down2.tim iso/dad/up0.tim iso/dad/up1.tim iso/dad/up2.tim iso/dad/right0.tim iso/dad/right1.tim iso/dad/right2.tim
+
+iso/dad/bunzom.arc: iso/dad/bunzom.tim
 
 # GF
 iso/gf/main.arc: iso/gf/gf0.tim iso/gf/gf1.tim iso/gf/gf2.tim

@@ -23,6 +23,7 @@
 
 #include "stage.h"
 #include "character/gf.h"
+#include "character/bunzom.h"
 
 #include "stdlib.h"
 
@@ -116,6 +117,8 @@ static struct
 	FontData font_bold, font_arial;
 	
 	Character *gf; //Title Girlfriend
+	Character *bunzom;
+
 } menu;
 
 //Internal menu functions
@@ -185,12 +188,12 @@ static void Menu_DifficultySelector(s32 x, s32 y)
 	
 	//Draw difficulty arrows
 	static const RECT arrow_src[2][2] = {
-		{{224, 64, 16, 32}, {224, 96, 16, 32}}, //left
-		{{240, 64, 16, 32}, {240, 96, 16, 32}}, //right
+		{{224, 68, 16, 32}, {224, 96 + 4, 16, 32}}, //left
+		{{240, 68, 16, 32}, {240, 96 + 4, 16, 32}}, //right
 	};
 	
-	Gfx_BlitTex(&menu.tex_story, &arrow_src[0][(pad_state.held & PAD_LEFT) != 0], x - 40 - 16, y - 16);
-	Gfx_BlitTex(&menu.tex_story, &arrow_src[1][(pad_state.held & PAD_RIGHT) != 0], x + 40, y - 16);
+	Gfx_BlitTex(&menu.tex_story, &arrow_src[0][(pad_state.held & PAD_LEFT) != 0], x - 40 - 16, y - 12);
+	Gfx_BlitTex(&menu.tex_story, &arrow_src[1][(pad_state.held & PAD_RIGHT) != 0], x + 40, y - 12);
 	
 	//Draw difficulty
 	static const RECT diff_srcs[] = {
@@ -251,6 +254,8 @@ void Menu_Load(MenuPage page)
 	stage.camera.bzoom = FIXED_UNIT;
 	stage.gf_speed = 4;
 	
+	menu.bunzom = Char_bunzom_New(FIXED_DEC(62,1), FIXED_DEC(-12,1));
+
 	//Initialize menu state
 	menu.select = menu.next_select = 0;
 	
@@ -300,6 +305,7 @@ void Menu_Unload(void)
 {
 	//Free title Girlfriend
 	Character_Free(menu.gf);
+	Character_Free(menu.bunzom);
 }
 
 void Menu_ToStage(StageId id, StageDiff diff, boolean story)
@@ -606,27 +612,22 @@ void Menu_Tick(void)
 			Menu_DrawBack(
 				menu.next_page == menu.page || menu.next_page == MenuPage_Title,
 				menu.scroll >> (FIXED_SHIFT + 3),
-				253 >> 1, 231 >> 1, 113 >> 1,
+				255 >> 1, 255 >> 1, 255 >> 1,
 				253 >> 1, 113 >> 1, 155 >> 1
 			);
 			break;
 		}
 		case MenuPage_Story:
 		{
+			menu.bunzom->tick(menu.bunzom);
 			static const struct
 			{
 				const char *week;
 				StageId stage;
 				const char *name;
-				const char *tracks[3];
+				const char *tracks[1];
 			} menu_options[] = {
-				{NULL, StageId_1_4, "TUTORIAL", {"TUTORIAL", NULL, NULL}},
-				{"1", StageId_1_1, "DADDY DEAREST", {"BOPEEBO", "FRESH", "DADBATTLE"}},
-				{"2", StageId_2_1, "SPOOKY MONTH", {"SPOOKEEZ", "SOUTH", "MONSTER"}},
-				{"3", StageId_3_1, "PICO", {"PICO", "PHILLY NICE", "BLAMMED"}},
-				{"4", StageId_4_1, "MOMMY MUST MURDER", {"SATIN PANTIES", "HIGH", "MILF"}},
-				{"5", StageId_5_1, "RED SNOW", {"COCOA", "EGGNOG", "WINTER HORRORLAND"}},
-				{"6", StageId_6_1, "HATING SIMULATOR", {"SENPAI", "ROSES", "THORNS"}},
+				{NULL, StageId_1_1, "DADDY DEAREST", {"BOPEEBO"}},
 			};
 			
 			//Initialize page
@@ -660,7 +661,7 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_UP)
 				{
 					//play scroll sound
-                    Audio_PlaySound(Sounds[0]);
+                    //Audio_PlaySound(Sounds[0]);
 					if (menu.select > 0)
 						menu.select--;
 					else
@@ -669,7 +670,7 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_DOWN)
 				{
 					//play scroll sound
-                    Audio_PlaySound(Sounds[0]);
+                    //Audio_PlaySound(Sounds[0]);
 					if (menu.select < COUNT_OF(menu_options) - 1)
 						menu.select++;
 					else
@@ -754,29 +755,10 @@ void Menu_Tick(void)
 			static const struct
 			{
 				StageId stage;
-				u32 col;
 				const char *text;
 			} menu_options[] = {
 				//{StageId_4_4, 0xFFFC96D7, "TEST"},
-				{StageId_1_4, 0xFF9271FD, "TUTORIAL"},
-				{StageId_1_1, 0xFF9271FD, "BOPEEBO"},
-				{StageId_1_2, 0xFF9271FD, "FRESH"},
-				{StageId_1_3, 0xFF9271FD, "DADBATTLE"},
-				{StageId_2_1, 0xFF223344, "SPOOKEEZ"},
-				{StageId_2_2, 0xFF223344, "SOUTH"},
-				{StageId_2_3, 0xFF223344, "MONSTER"},
-				{StageId_3_1, 0xFF941653, "PICO"},
-				{StageId_3_2, 0xFF941653, "PHILLY NICE"},
-				{StageId_3_3, 0xFF941653, "BLAMMED"},
-				{StageId_4_1, 0xFFFC96D7, "SATIN PANTIES"},
-				{StageId_4_2, 0xFFFC96D7, "HIGH"},
-				{StageId_4_3, 0xFFFC96D7, "MILF"},
-				{StageId_5_1, 0xFFA0D1FF, "COCOA"},
-				{StageId_5_2, 0xFFA0D1FF, "EGGNOG"},
-				{StageId_5_3, 0xFFA0D1FF, "WINTER HORRORLAND"},
-				{StageId_6_1, 0xFFFF78BF, "SENPAI"},
-				{StageId_6_2, 0xFFFF78BF, "ROSES"},
-				{StageId_6_3, 0xFFFF78BF, "THORNS"},
+				{StageId_1_1, "BOPEEBO"},
 			};
 			
 			//Initialize page
@@ -807,7 +789,7 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_UP)
 				{
 					//play scroll sound
-                    Audio_PlaySound(Sounds[0]);
+                    //Audio_PlaySound(Sounds[0]);
 					if (menu.select > 0)
 						menu.select--;
 					else
@@ -816,7 +798,7 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_DOWN)
 				{
 					//play scroll sound
-                    Audio_PlaySound(Sounds[0]);
+                   // Audio_PlaySound(Sounds[0]);
 					if (menu.select < COUNT_OF(menu_options) - 1)
 						menu.select++;
 					else
@@ -868,20 +850,11 @@ void Menu_Tick(void)
 			}
 			
 			//Draw background
-			fixed_t tgt_r = (fixed_t)((menu_options[menu.select].col >> 16) & 0xFF) << FIXED_SHIFT;
-			fixed_t tgt_g = (fixed_t)((menu_options[menu.select].col >>  8) & 0xFF) << FIXED_SHIFT;
-			fixed_t tgt_b = (fixed_t)((menu_options[menu.select].col >>  0) & 0xFF) << FIXED_SHIFT;
-			
-			menu.page_state.freeplay.back_r += (tgt_r - menu.page_state.freeplay.back_r) >> 4;
-			menu.page_state.freeplay.back_g += (tgt_g - menu.page_state.freeplay.back_g) >> 4;
-			menu.page_state.freeplay.back_b += (tgt_b - menu.page_state.freeplay.back_b) >> 4;
 			
 			Menu_DrawBack(
 				true,
 				8,
-				menu.page_state.freeplay.back_r >> (FIXED_SHIFT + 1),
-				menu.page_state.freeplay.back_g >> (FIXED_SHIFT + 1),
-				menu.page_state.freeplay.back_b >> (FIXED_SHIFT + 1),
+				197 >> 1, 240 >> 1, 95 >> 1,
 				0, 0, 0
 			);
 			break;
@@ -996,7 +969,7 @@ void Menu_Tick(void)
 			Menu_DrawBack(
 				true,
 				8,
-				197 >> 1, 240 >> 1, 95 >> 1,
+				255 >> 1, 255 >> 1, 255 >> 1,
 				0, 0, 0
 			);
 			break;
@@ -1139,7 +1112,7 @@ void Menu_Tick(void)
 			Menu_DrawBack(
 				true,
 				8,
-				253 >> 1, 113 >> 1, 155 >> 1,
+				191 >> 1, 68 >> 1, 252 >> 1,
 				0, 0, 0
 			);
 			break;

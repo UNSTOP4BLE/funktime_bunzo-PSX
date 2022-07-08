@@ -66,16 +66,17 @@
 				
 				<!-- Dad assets -->
 				<file name = "dad.arc" type = "data" source = "iso/dad/main.arc"/>
+				<file name = "bunzom.arc" type = "data" source = "iso/dad/bunzom.arc"/>
 				
 				<!-- Girlfriend assets -->
 				<file name = "gf.arc" type = "data" source = "iso/gf/main.arc"/>
 				<file name = "speaker.tim" type = "data" source = "iso/gf/speaker.tim"/>
 			</dir>
 		    
-		    <!-- Chungus -->
+		    <!-- Chungus
 			<dir name = "movie">
 			    <file name = "ded.str" type = "str" source = "iso/movie/ded.str"/>
-			</dir>
+			</dir> -->
 
 			<!-- Sound effect -->
 			<dir name = "sounds">
