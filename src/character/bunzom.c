@@ -34,7 +34,7 @@ typedef struct
 
 //bunzom character definitions
 static const CharFrame char_bunzom_frame[] = {
-	{bunzom_ArcMain_Idle, {  0,   0,  81, 64}, { 0, 0}}, 
+	{bunzom_ArcMain_Idle, {  0,   0,  81, 64}, { 1, 0}}, 
 	{bunzom_ArcMain_Idle, { 81,   0,  80, 64}, { 0, 0}},
 	{bunzom_ArcMain_Idle, {161,   0,  80, 64}, { 0, 0}},
 };

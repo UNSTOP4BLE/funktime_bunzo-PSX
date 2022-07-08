@@ -29,6 +29,7 @@
 
 static u32 Sounds[3];
 
+#define shiter 40
 //Menu messages
 static const char *funny_messages[][2] = {
 	{"PSX PORT BY CUCKYDEV", "YOU KNOW IT"},
@@ -208,11 +209,14 @@ static void Menu_DifficultySelector(s32 x, s32 y)
 
 static void Menu_DrawWeek(const char *week, s32 x, s32 y)
 {
+	x += 40;
+	y += shiter;
 	//Draw label
 	if (week == NULL)
 	{
 		//Tutorial
 		RECT label_src = {0, 0, 112, 32};
+
 		Gfx_BlitTex(&menu.tex_story, &label_src, x, y);
 	}
 	else
@@ -254,7 +258,7 @@ void Menu_Load(MenuPage page)
 	stage.camera.bzoom = FIXED_UNIT;
 	stage.gf_speed = 4;
 	
-	menu.bunzom = Char_bunzom_New(FIXED_DEC(62,1), FIXED_DEC(-12,1));
+	menu.bunzom = Char_bunzom_New(FIXED_DEC(-40,1), FIXED_DEC(-90,1));
 
 	//Initialize menu state
 	menu.select = menu.next_select = 0;
@@ -619,7 +623,6 @@ void Menu_Tick(void)
 		}
 		case MenuPage_Story:
 		{
-			menu.bunzom->tick(menu.bunzom);
 			static const struct
 			{
 				const char *week;
@@ -627,7 +630,7 @@ void Menu_Tick(void)
 				const char *name;
 				const char *tracks[1];
 			} menu_options[] = {
-				{NULL, StageId_1_1, "DADDY DEAREST", {"BOPEEBO"}},
+				{NULL, StageId_1_1, "LET'S START PLAYING...", {"MUSICAL MEMORY"}},
 			};
 			
 			//Initialize page
@@ -649,7 +652,7 @@ void Menu_Tick(void)
 			}
 			
 			//Draw difficulty selector
-			Menu_DifficultySelector(SCREEN_WIDTH - 75, 80);
+			Menu_DifficultySelector(SCREEN_WIDTH - 65, 80 + shiter);
 			
 			//Handle option and selection
 			if (menu.trans_time > 0 && (menu.trans_time -= timer_dt) <= 0)
@@ -702,28 +705,41 @@ void Menu_Tick(void)
 			}
 			
 			//Draw week name and tracks
-			menu.font_bold.draw(&menu.font_bold,
+			menu.font_arial.draw(&menu.font_arial,
 				menu_options[menu.select].name,
 				SCREEN_WIDTH - 16,
-				24,
+				7,
 				FontAlign_Right
 			);
 			
 			const char * const *trackp = menu_options[menu.select].tracks;
 			for (size_t i = 0; i < COUNT_OF(menu_options[menu.select].tracks); i++, trackp++)
 			{
+				RECT tracks_src = {1, 75, 50, 10};
+				RECT tracks_dst = {32, 126 + 20, 50, 10};
+
+				Gfx_DrawTex(&menu.tex_story, &tracks_src, &tracks_dst);
+
 				if (*trackp != NULL)
-					menu.font_bold.draw(&menu.font_bold,
+					menu.font_arial.draw_col(&menu.font_arial,
 						*trackp,
-						SCREEN_WIDTH - 16,
-						SCREEN_HEIGHT - (4 * 24) + (i * 24),
-						FontAlign_Right
+						62,
+						SCREEN_HEIGHT - (4 * 24) + (i * 24) + 20,
+						FontAlign_Center,
+						209 >> 1,
+						87  >> 1,
+						119 >> 1
 					);
 			}
 			
+			menu.bunzom->tick(menu.bunzom);
+
 			//Draw upper strip
-			RECT name_bar = {0, 16, SCREEN_WIDTH, 32};
-			Gfx_DrawRect(&name_bar, 249, 207, 81);
+			RECT name_bar_src = {127, 1, 128, 66};
+			RECT name_bar_dst = {0, 16, SCREEN_WIDTH / 2, 83};
+			RECT name_bar_dst2 = {SCREEN_WIDTH / 2 + 160, 16, -SCREEN_WIDTH / 2, 83};
+			Gfx_DrawTex(&menu.tex_story, &name_bar_src, &name_bar_dst);
+			Gfx_DrawTex(&menu.tex_story, &name_bar_src, &name_bar_dst2);
 			
 			//Draw options
 			s32 next_scroll = menu.select * FIXED_DEC(48,1);
@@ -757,8 +773,7 @@ void Menu_Tick(void)
 				StageId stage;
 				const char *text;
 			} menu_options[] = {
-				//{StageId_4_4, 0xFFFC96D7, "TEST"},
-				{StageId_1_1, "BOPEEBO"},
+				{StageId_1_1, "MUSICAL MEMORY"},
 			};
 			
 			//Initialize page
@@ -850,7 +865,6 @@ void Menu_Tick(void)
 			}
 			
 			//Draw background
-			
 			Menu_DrawBack(
 				true,
 				8,
