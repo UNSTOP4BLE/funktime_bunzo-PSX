@@ -74,8 +74,11 @@ void DeadSc_Play(int animcooldown)
 	}
 	RECT src = {realframe.x, realframe.y, 127, 127};
 	RECT dst = {(SCREEN_WIDTH - 320) >> 1, (SCREEN_HEIGHT - 240) >> 1, 320, 240};
-	if (anim > 3)
-		Gfx_DrawTex(&deadsc_tex.sc1, &src, &dst);
-	else 
-		Gfx_DrawTex(&deadsc_tex.sc0, &src, &dst);
+	if (dedtimer <= 224)
+	{
+		if (anim > 3)
+			Gfx_DrawTex(&deadsc_tex.sc1, &src, &dst);
+		else 
+			Gfx_DrawTex(&deadsc_tex.sc0, &src, &dst);
+	}
 }
