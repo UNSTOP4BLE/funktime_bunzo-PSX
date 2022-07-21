@@ -116,9 +116,9 @@ void Char_Dad_Tick(Character *character)
 	if (this->frame == 0)
 		soundcooldown ++;
 	
-	if (soundcooldown == 8 || pad_state.press & PAD_CROSS)
+	if (soundcooldown == 8)
 	{
-		Audio_PlaySound(Sounds[0]);
+		Audio_PlaySound(Sounds[0], 0x1aaa);
 		soundcooldown = 0;
 	}
 

@@ -30,6 +30,7 @@ typedef enum
 } XA_Track;
 
 //Audio functions
+u32 Audio_GetLength(XA_Track lengthtrack);
 void Audio_Init(void);
 void Audio_Quit(void);
 void Audio_PlayXA_Track(XA_Track track, u8 volume, u8 channel, boolean loop);
@@ -42,11 +43,10 @@ s32 Audio_TellXA_Milli(void);
 boolean Audio_PlayingXA(void);
 void Audio_WaitPlayXA(void);
 void Audio_ProcessXA(void);
-void findFreeChannel(void);
 u32 Audio_LoadVAGData(u32 *sound, u32 sound_size);
 void AudioPlayVAG(int channel, u32 addr);
-void Audio_PlaySoundOnChannel(u32 addr, u32 channel);
-void Audio_PlaySound(u32 addr);
+void Audio_PlaySoundOnChannel(u32 addr, u32 channel, int volume);
+void Audio_PlaySound(u32 addr, int volume);
 void Audio_ClearAlloc(void);
 
 #endif

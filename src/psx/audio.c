@@ -56,6 +56,11 @@ static CdlFILE xa_files[XA_Max];
 
 #include "../audio_def.h"
 
+u32 Audio_GetLength(XA_Track lengthtrack)
+{
+	return (xa_tracks[lengthtrack].length / 75) / IO_SECT_SIZE;
+}
+
 //Internal XA functions
 static u8 XA_BCD(u8 x)
 {
@@ -208,7 +213,7 @@ void Audio_PlayXA_Track(XA_Track track, u8 volume, u8 channel, boolean loop)
 	//Get track information
 	CdlFILE file;
 	Audio_GetXAFile(&file, track);
-	
+
 	//Play track
 	Audio_PlayXA_File(&file, volume, channel, loop);
 }
@@ -366,8 +371,14 @@ void Audio_ProcessXA(void)
 }
 
 /* .VAG file loader */
-
 #define VAG_HEADER_SIZE 48
+static int lastChannelUsed = 0;
+
+static int getFreeChannel(void) {
+    int channel = lastChannelUsed;
+    lastChannelUsed = (channel + 1) % 24;
+    return channel;
+}
 
 void Audio_ClearAlloc(void) {
 	audio_alloc_ptr = ALLOC_START_ADDR;
@@ -401,29 +412,21 @@ u32 Audio_LoadVAGData(u32 *sound, u32 sound_size) {
 	return addr;
 }
 
-void Audio_PlaySoundOnChannel(u32 addr, u32 channel) {
-	SPU_KEY_OFF |= (1 << channel);
+void Audio_PlaySoundOnChannel(u32 addr, u32 channel, int volume) {
+	SPU_KEY_OFF = (1 << channel);
 
-	SPU_CHANNELS[channel].vol_left   = 0x3fff;
-	SPU_CHANNELS[channel].vol_right  = 0x3fff;
+	SPU_CHANNELS[channel].vol_left   = volume;
+	SPU_CHANNELS[channel].vol_right  = volume;
 	SPU_CHANNELS[channel].addr       = SPU_RAM_ADDR(addr);
 	SPU_CHANNELS[channel].loop_addr  = SPU_RAM_ADDR(DUMMY_ADDR);
 	SPU_CHANNELS[channel].freq       = 0x1000; // 44100 Hz
 	SPU_CHANNELS[channel].adsr_param = 0x1fc080ff;
 
-	SPU_KEY_ON |= (1 << channel);
+	SPU_KEY_ON = (1 << channel);
 }
 
-void Audio_PlaySound(u32 addr) {
-    for (u32 ch = 0; ch < 24; ch++) { // channels 0-3 are reserved for streaming
-        if (SPU_CHANNELS[ch]._reserved)
-            continue;
-
-        //printf("Playing sound on channel %d (addr=%08x)\n", ch, addr);
-        Audio_PlaySoundOnChannel(addr, ch);
-        return;
-    }
-
-    printf("Could not find free channel to play sound (addr=%08x)\n", addr);
+void Audio_PlaySound(u32 addr, int volume) {
+    Audio_PlaySoundOnChannel(addr, getFreeChannel(), volume);
+   // printf("Could not find free channel to play sound (addr=%08x)\n", addr);
 }
 

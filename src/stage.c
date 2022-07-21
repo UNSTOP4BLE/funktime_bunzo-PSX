@@ -1128,7 +1128,7 @@ static void Stage_CountDown(void)
 	{
 		case -20:
 			if (soundcooldown == 0)
-				Audio_PlaySound(Sounds[2]);
+				Audio_PlaySound(Sounds[2], 0x3fff);
 			soundcooldown ++;
 			break;
 		case -16:
@@ -1137,7 +1137,7 @@ static void Stage_CountDown(void)
 		case -15:
 			drawshit = 3;
 			if (soundcooldown == 0)
-				Audio_PlaySound(Sounds[1]);
+				Audio_PlaySound(Sounds[1], 0x3fff);
 			soundcooldown ++;
 			break;
 		case -11:
@@ -1146,7 +1146,7 @@ static void Stage_CountDown(void)
 		case -10:
 			drawshit = 2;
 			if (soundcooldown == 0)
-				Audio_PlaySound(Sounds[0]);
+				Audio_PlaySound(Sounds[0], 0x3fff);
 			soundcooldown ++;
 			break;
 		case -6:
@@ -1155,7 +1155,7 @@ static void Stage_CountDown(void)
 		case -5:
 			drawshit = 1;
 			if (soundcooldown == 0)
-				Audio_PlaySound(Sounds[3]);
+				Audio_PlaySound(Sounds[3], 0x3fff);
 			soundcooldown ++;
 			break;
 	}
