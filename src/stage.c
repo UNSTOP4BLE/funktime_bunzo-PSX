@@ -63,8 +63,6 @@ static const u8 note_anims[4][3] = {
 	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_MissR},
 };
 
-
-
 //Stage definitions
 boolean noteshake;
 //check what opponent is singing
@@ -1618,6 +1616,20 @@ static boolean Stage_NextLoad(void)
 		Timer_Reset();
 		return true;
 	}
+}
+
+void Stage_MoveNote(int danote, int note_y, int x, int y)
+{
+	//what do you expect this code to do lmao
+	if (x >= 0)
+		note_x[danote] += x;
+	else
+		note_x[danote] -= x;
+
+	if (y >= 0)
+		note_y[danote] += y;
+	else
+		note_y[danote] -= y;
 }
 
 void Stage_Tick(void)
