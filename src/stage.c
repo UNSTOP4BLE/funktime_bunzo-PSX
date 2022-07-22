@@ -26,7 +26,7 @@
 //Stage constants
 //#define STAGE_NOHUD //Disable the HUD
 
-#define STAGE_FREECAM //Freecam
+//#define STAGE_FREECAM //Freecam
 
 //normal note x
 static int note_x[8] = {
@@ -1304,32 +1304,6 @@ static void Stage_LoadChart(void)
 
 static void Stage_LoadSFX(void)
 {
-	if (stage.stage_id >= StageId_6_1 && stage.stage_id <= StageId_6_3)
-	{
-		//Load SFX
-	 	CdlFILE file;
-	  	IO_FindFile(&file, "\\SOUNDS\\INTRO1P.VAG;1");
-	    u32 *data = IO_ReadFile(&file);
-	    Sounds[0] = Audio_LoadVAGData(data, file.size);
-	    Mem_Free(data);
-
-		IO_FindFile(&file, "\\SOUNDS\\INTRO2P.VAG;1");
-	    data = IO_ReadFile(&file);
-	    Sounds[1] = Audio_LoadVAGData(data, file.size);
-	    Mem_Free(data);
-
-		IO_FindFile(&file, "\\SOUNDS\\INTRO3P.VAG;1");
-	    data = IO_ReadFile(&file);
-	    Sounds[2] = Audio_LoadVAGData(data, file.size);
-	    Mem_Free(data);
-
-	   	IO_FindFile(&file, "\\SOUNDS\\INTROGOP.VAG;1");
-	    data = IO_ReadFile(&file);
-	    Sounds[3] = Audio_LoadVAGData(data, file.size);
-	    Mem_Free(data);
-	}
-	else
-	{
 		//Load SFX
 	 	CdlFILE file;
 	  	IO_FindFile(&file, "\\SOUNDS\\INTRO1.VAG;1");
@@ -1351,7 +1325,6 @@ static void Stage_LoadSFX(void)
 	    data = IO_ReadFile(&file);
 	    Sounds[3] = Audio_LoadVAGData(data, file.size);
 	    Mem_Free(data);
-	}
 }
 
 static void Stage_LoadMusic(void)
@@ -1443,7 +1416,7 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 		Gfx_LoadTex(&stage.tex_hud1, IO_Read("\\STAGE\\HUD1.TIM;1"), GFX_LOADTEX_FREE);
 	}
 
-	if (stage.stage_id == StageId_1_1)
+	if (stage.stage_id == StageId_1_1 || stage.stage_id == StageId_1_2)
 	{
 		Gfx_LoadTex(&deadsc_tex.sc0, IO_Read("\\BF\\SC0.TIM;1"), GFX_LOADTEX_FREE);
 		Gfx_LoadTex(&deadsc_tex.sc1, IO_Read("\\BF\\SC1.TIM;1"), GFX_LOADTEX_FREE);
@@ -1454,6 +1427,7 @@ void Stage_Load(StageId id, StageDiff difficulty, boolean story)
 
 	//Load SFX
 	Stage_LoadSFX();
+	DeadSc_LoadSFX();
 
 
 	//load fonts
@@ -2010,7 +1984,7 @@ void Stage_Tick(void)
 						//Opponent note hits
 						if (playing && (note->type & NOTE_FLAG_OPPONENT) && !(note->type & NOTE_FLAG_HIT))
 						{
-							if (stage.player_state[0].health > 2000 && stage.babymode == 0 && stage.mode != StageMode_2P)
+							if (stage.babymode == 0 && stage.mode != StageMode_2P)
 								stage.player_state[0].health -= 45;
 							
 
@@ -2279,7 +2253,6 @@ void Stage_Tick(void)
 		{
 			//Stop music immediately
 			Audio_StopXA();
-			Audio_PlayXA_Track(XA_GameOver, 0x40, 1, true);
 			
 			//Unload stage data
 			Mem_Free(stage.chart_data);
@@ -2347,8 +2320,8 @@ void Stage_Tick(void)
 			//Enter next state once mic has been dropped
 			if (stage.player->animatable.anim == PlayerAnim_Dead3)
 			{
-				stage.state = StageState_DeadRetry;
-				
+				stage.state = StageState_DeadRetry;		
+				Audio_PlayXA_Track(XA_GameOver, 0x40, 1, true);
 			}
 			break;
 		}

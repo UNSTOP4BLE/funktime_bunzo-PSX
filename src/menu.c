@@ -517,7 +517,7 @@ void Menu_Tick(void)
 			
 			//Draw version identification
 			menu.font_bold.draw(&menu.font_bold,
-				"PSXFUNKIN BY CUCKYDEV",
+				"PSXBUNZO BY UNSTOPABLE",
 				16,
 				SCREEN_HEIGHT - 32,
 				FontAlign_Left
@@ -774,8 +774,9 @@ void Menu_Tick(void)
 				const char *text;
 			} menu_options[] = {
 				{StageId_1_1, "MUSICAL MEMORY"},
+				{StageId_1_2, "MUSICAL MEMORY OLD"},
 			};
-			
+
 			//Initialize page
 			if (menu.page_swap)
 			{
@@ -797,6 +798,22 @@ void Menu_Tick(void)
 			//Draw difficulty selector
 			Menu_DifficultySelector(SCREEN_WIDTH - 100, SCREEN_HEIGHT2 - 48);
 			
+			for (u8 i = 0; i < COUNT_OF(menu_options); i++)
+			{
+				//Get position on screen
+				s32 y = (i * 24) - 8 - (menu.scroll >> FIXED_SHIFT);
+				if (y <= -SCREEN_HEIGHT2 - 8)
+					continue;
+				if (y >= SCREEN_HEIGHT2 + 8)
+					break;
+		
+				RECT bunzo_src = {58, 37, 64, 48}; 
+				RECT bunzo_dst = {strlen(menu_options[i].text) * 14 + 48 + (y >> 2) - 4, SCREEN_HEIGHT2 + y - 20 + 10, 25, 20};
+
+				Gfx_DrawTex(&menu.tex_story, &bunzo_src, &bunzo_dst); 
+			}
+		
+
 			//Handle option and selection
 			if (menu.next_page == menu.page && Trans_Idle())
 			{
@@ -804,7 +821,7 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_UP)
 				{
 					//play scroll sound
-                    //Audio_PlaySound(Sounds[0]);
+                    Audio_PlaySound(Sounds[0], 0x3fff);
 					if (menu.select > 0)
 						menu.select--;
 					else
@@ -813,7 +830,7 @@ void Menu_Tick(void)
 				if (pad_state.press & PAD_DOWN)
 				{
 					//play scroll sound
-                   // Audio_PlaySound(Sounds[0]);
+                    Audio_PlaySound(Sounds[0], 0x3fff);
 					if (menu.select < COUNT_OF(menu_options) - 1)
 						menu.select++;
 					else

@@ -5,10 +5,13 @@
 */
 #include "deadsc.h"
 #include "gfx.h"
+#include "audio.h"
+#include "mem.h"
 
 int anim;
 int animspeed;
 int dedtimer;
+static u32 Sounds[1];
 
 DeadSc_Tex deadsc_tex;
 
@@ -34,11 +37,23 @@ void DeadSc_Init()
 	realframe = frame0;
 }
 
+void DeadSc_LoadSFX()
+{
+	 CdlFILE file;
+	IO_FindFile(&file, "\\SOUNDS\\SCREAM.VAG;1");
+	u32 *data = IO_ReadFile(&file);
+	Sounds[0] = Audio_LoadVAGData(data, file.size);
+	Mem_Free(data);
+}
+
 void DeadSc_Play(int animcooldown)
 {
 	animspeed ++;
 	FntPrint("%d", dedtimer);
 	dedtimer ++;
+
+	if (dedtimer == 1)
+		Audio_PlaySound(Sounds[0], 0x3fff);
 	if (animspeed >= animcooldown)
 	{
 		anim ++;

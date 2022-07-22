@@ -56,6 +56,11 @@
 				<file name = "1.1e.cht" type = "data" source = "iso/chart/musical-memory-easy.json.cht"/>
 				<file name = "1.1n.cht" type = "data" source = "iso/chart/musical-memory.json.cht"/>
 				<file name = "1.1h.cht" type = "data" source = "iso/chart/musical-memory-hard.json.cht"/>
+
+
+				<file name = "1.2e.cht" type = "data" source = "iso/chart/musical-memory-easy-old.json.cht"/>
+				<file name = "1.2n.cht" type = "data" source = "iso/chart/musical-memory-old.json.cht"/>
+				<file name = "1.2h.cht" type = "data" source = "iso/chart/musical-memory-hard-old.json.cht"/>
 			</dir>
 
 			<!-- Character assets -->
@@ -95,6 +100,9 @@
 				<file name = "intro2p.vag" type = "data" source = "iso/sounds/intro2p.vag"/>
 				<file name = "intro3p.vag" type = "data" source = "iso/sounds/intro3p.vag"/>
 				<file name = "introgop.vag" type = "data" source = "iso/sounds/introgop.vag"/>
+				<file name = "loss.vag" type = "data" source = "iso/sounds/loss.vag"/>
+				<file name = "scream.vag" type = "data" source = "iso/sounds/scream.vag"/>
+
 			</dir>
 			
 			<!-- Music -->

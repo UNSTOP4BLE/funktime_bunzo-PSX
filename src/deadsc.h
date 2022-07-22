@@ -18,6 +18,7 @@ typedef struct
 extern DeadSc_Tex deadsc_tex;
 
 void DeadSc_Init();
+void DeadSc_LoadSFX();
 void DeadSc_Play(int animcooldown);
 
 #endif

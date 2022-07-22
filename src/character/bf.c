@@ -73,8 +73,6 @@ typedef struct
 	
 	u8 retry_bump;
 	
-	SkullFragment skull[COUNT_OF(char_bf_skull)];
-	u8 skull_scale;
 } Char_BF;
 
 //Boyfriend player definitions
@@ -148,7 +146,6 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{2, (const u8[]){ 20, 21, 22, 23, 24, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
 	{2, (const u8[]){ 25, 26, 27, 28, 29, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
 
-/*
 	{5, (const u8[]){30, 31, 32, 33, 33, 33, 33, 33, 33, 33, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
 	{5, (const u8[]){33, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
 	{3, (const u8[]){34, 35, 36, 37, 37, 37, 37, 37, 37, 37, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
@@ -211,41 +208,9 @@ void Char_BF_Tick(Character *character)
 	
 	//Retry screen
 	if (character->animatable.anim >= PlayerAnim_Dead3)
-	{
-		//Tick skull fragments
-		if (this->skull_scale)
-		{
-			SkullFragment *frag = this->skull;
-			for (size_t i = 0; i < COUNT_OF_MEMBER(Char_BF, skull); i++, frag++)
-			{
-				//Draw fragment
-				RECT frag_src = {
-					(i & 1) ? 112 : 96,
-					(i >> 1) << 4,
-					16,
-					16
-				};
-				fixed_t skull_dim = (FIXED_DEC(16,1) * this->skull_scale) >> 6;
-				fixed_t skull_rad = skull_dim >> 1;
-				RECT_FIXED frag_dst = {
-					character->x + (((fixed_t)frag->x << FIXED_SHIFT) >> 3) - skull_rad - stage.camera.x,
-					character->y + (((fixed_t)frag->y << FIXED_SHIFT) >> 3) - skull_rad - stage.camera.y,
-					skull_dim,
-					skull_dim,
-				};
-				Stage_DrawTex(&this->tex_retry, &frag_src, &frag_dst, FIXED_MUL(stage.camera.zoom, stage.bump));
-				
-				//Move fragment
-				frag->x += frag->xsp;
-				frag->y += ++frag->ysp;
-			}
-			
-			//Decrease scale
-			this->skull_scale--;
-		}
-		
+	{	
 		//Draw input options
-		u8 input_scale = 16 - this->skull_scale;
+		u8 input_scale = 16;
 		if (input_scale > 16)
 			input_scale = 0;
 		

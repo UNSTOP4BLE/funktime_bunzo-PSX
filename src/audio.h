@@ -25,6 +25,7 @@ typedef enum
 	XA_GameOver,     //Game Over
 	//WEEK1A.XA
 	XA_Bopeebo, //Bopeebo
+	XA_Fresh, //Fresh
 	
 	XA_TrackMax,
 } XA_Track;

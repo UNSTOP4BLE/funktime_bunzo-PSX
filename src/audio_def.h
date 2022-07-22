@@ -8,10 +8,11 @@ typedef struct
 
 static const XA_TrackDef xa_tracks[] = {
 	//MENU.XA
-	{XA_Menu, XA_LENGTH(11295)}, //XA_GettinFreaky
-	{XA_Menu, XA_LENGTH(3840)},  //XA_GameOver
+	{XA_Menu, XA_LENGTH(8200)}, //XA_GettinFreaky
+	{XA_Menu, XA_LENGTH(3800)},  //XA_GameOver
 	//WEEK1A.XA
 	{XA_Week1A, XA_LENGTH(14400)}, //XA_Bopeebo
+	{XA_Week1A, XA_LENGTH(14400)}, //XA_Fresh
 };
 
 static const char *xa_paths[] = {
@@ -33,6 +34,7 @@ static const XA_Mp3 xa_mp3s[] = {
 	{"gameover", false}, //XA_GameOver
 	//WEEK1A.XA
 	{"bopeebo", true}, //XA_Bopeebo
+	{"fresh", true}, //XA_Fresh
 	
 	{NULL, false}
 };
