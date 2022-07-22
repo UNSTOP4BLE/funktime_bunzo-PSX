@@ -50,6 +50,9 @@ enum
 	BF_ArcMain_Miss1,
 	BF_ArcMain_Miss2,
 	BF_ArcMain_Dead0, //BREAK
+	BF_ArcMain_Dead1, //Mic Drop
+	BF_ArcMain_Dead2, //Twitch
+	BF_ArcMain_Retry, //Retry prompt
 	
 	BF_ArcMain_Max,
 };
@@ -81,44 +84,54 @@ static const CharFrame char_bf_frame[] = {
 	{BF_ArcMain_Idle, {  0,  94, 123,  95}, { 64,  92}}, //2 idle 3
 	{BF_ArcMain_Idle, {123,  93, 125,  96}, { 64,  94}}, //3 idle 4
 	
-	{BF_ArcMain_Left0, {0,    0,  247, 103}, {180, 101}}, //5 left 1
-	{BF_ArcMain_Left0, {0,  103,  247, 106}, {191, 101}}, //6 left 2
-	{BF_ArcMain_Left1, {0,    0,  234, 103}, {178, 101}}, //5 left 1
-	{BF_ArcMain_Left1, {0,  103,  181, 103}, { 96, 102}}, //6 left 2
+	{BF_ArcMain_Left0, {0,    0,  247, 103}, {180, 101}}, //4 left 1
+	{BF_ArcMain_Left0, {0,  103,  247, 106}, {191, 101}}, //5 left 2
+	{BF_ArcMain_Left1, {0,    0,  234, 103}, {178, 101}}, //6 left 1
+	{BF_ArcMain_Left1, {0,  103,  181, 103}, { 96, 102}}, //7 left 2
 	
-	{BF_ArcMain_Down0, {0,   0,  162, 126}, { 89, 99}}, //7 down 1
-	{BF_ArcMain_Down0, {0, 126,  162, 126}, { 94, 97}}, //8 down 2
-	{BF_ArcMain_Down1, {0,   0,  151, 122}, { 85, 99}}, //7 down 1
-	{BF_ArcMain_Down1, {0, 122,  151, 102}, { 67, 100}}, //8 down 2
+	{BF_ArcMain_Down0, {0,   0,  162, 126}, { 89, 99}}, //8 down 1
+	{BF_ArcMain_Down0, {0, 126,  162, 126}, { 94, 97}}, //9 down 2
+	{BF_ArcMain_Down1, {0,   0,  151, 122}, { 85, 99}}, //10 down 1
+	{BF_ArcMain_Down1, {0, 122,  151, 102}, { 67, 100}}, //11 down 2
 	
-	{BF_ArcMain_Up0, {0,   0,  157, 119}, { 61, 103}}, //9 up 1
-	{BF_ArcMain_Up0, {0, 119,  157, 132}, { 61, 103}}, //10 up 2
-	{BF_ArcMain_Up1, {0,   0,  149, 116}, { 62, 102}}, //9 up 1
-	{BF_ArcMain_Up1, {0, 116,  149, 104}, { 62, 102}}, //10 up 2
+	{BF_ArcMain_Up0, {0,   0,  157, 119}, { 61, 103}}, //12 up 1
+	{BF_ArcMain_Up0, {0, 119,  157, 132}, { 61, 103}}, //13 up 2
+	{BF_ArcMain_Up1, {0,   0,  149, 116}, { 62, 102}}, //14 up 1
+	{BF_ArcMain_Up1, {0, 116,  149, 104}, { 62, 102}}, //15 up 2
 	
-	{BF_ArcMain_Right0, {0,   0,  248, 104}, { 52, 101}}, //11 right 1
-	{BF_ArcMain_Right0, {0, 104,  248, 108}, { 50, 101}}, //12 right 2
-	{BF_ArcMain_Right1, {0,   0,  235, 103}, { 51, 101}}, //11 right 1
-	{BF_ArcMain_Right1, {0, 103,  159, 103}, { 51, 101}}, //12 right 2
+	{BF_ArcMain_Right0, {0,   0,  248, 104}, { 52, 101}}, //16 right 1
+	{BF_ArcMain_Right0, {0, 104,  248, 108}, { 50, 101}}, //17 right 2
+	{BF_ArcMain_Right1, {0,   0,  235, 103}, { 51, 101}}, //18 right 1
+	{BF_ArcMain_Right1, {0, 103,  159, 103}, { 51, 101}}, //19 right 2
 
 	{BF_ArcMain_Miss0, {  0,   0, 128, 103}, { 63, 101}}, //20 left miss 1
-	{BF_ArcMain_Miss0, {128,   0, 128, 103}, { 63, 101}}, //20 left miss 1
-	{BF_ArcMain_Miss0, {  0, 103, 128, 103}, { 64, 101}}, //20 left miss 1
-	{BF_ArcMain_Miss0, {128, 103, 128, 103}, { 63, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss0, {128,   0, 128, 103}, { 63, 101}}, //21 left miss 1
+	{BF_ArcMain_Miss0, {  0, 103, 128, 103}, { 64, 101}}, //22 left miss 1
+	{BF_ArcMain_Miss0, {128, 103, 128, 103}, { 63, 101}}, //23 left miss 1
 
-	{BF_ArcMain_Miss1, {  0,   0, 129, 103}, { 63, 101}}, //20 left miss 1
-	//{BF_ArcMain_Miss1, {129,   0, 127, 103}, { 52, 101}}, //20 left miss 1
-	{BF_ArcMain_Miss1, {  0, 103, 128, 103}, { 62, 101}}, //20 left miss 1
-	{BF_ArcMain_Miss1, {128, 103, 128, 103}, { 63, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss1, {  0,   0, 129, 103}, { 63, 101}}, //24 left miss 1
+	//{BF_ArcMain_Miss1, {129,   0, 127, 103}, { 52, 101}}, //25 left miss 1
+	{BF_ArcMain_Miss1, {  0, 103, 128, 103}, { 62, 101}}, //25 left miss 1
+	{BF_ArcMain_Miss1, {128, 103, 128, 103}, { 63, 101}}, //26 left miss 1
 
-	{BF_ArcMain_Miss2, {  0,   0, 129, 103}, { 63, 101}}, //20 left miss 1
-	{BF_ArcMain_Miss2, {129,   0, 127, 103}, { 61, 101}}, //20 left miss 1
-	{BF_ArcMain_Miss2, {  0, 103, 129, 103}, { 63, 101}}, //20 left miss 1
+	{BF_ArcMain_Miss2, {  0,   0, 129, 103}, { 63, 101}}, //27 left miss 1
+	{BF_ArcMain_Miss2, {129,   0, 127, 103}, { 61, 101}}, //28 left miss 1
+	{BF_ArcMain_Miss2, {  0, 103, 129, 103}, { 63, 101}}, //29 left miss 1
 
-	{BF_ArcMain_Dead0, {  0,   0, 128, 128}, { 53,  98}}, //23 dead0 0
-	{BF_ArcMain_Dead0, {128,   0, 128, 128}, { 53,  98}}, //24 dead0 1
-	{BF_ArcMain_Dead0, {  0, 128, 128, 128}, { 53,  98}}, //25 dead0 2
-	{BF_ArcMain_Dead0, {128, 128, 128, 128}, { 53,  98}}, //26 dead0 3
+	{BF_ArcMain_Dead0, {  0,   0, 128, 128}, { 53,  98}}, //30 dead0 0
+	{BF_ArcMain_Dead0, {128,   0, 128, 128}, { 53,  98}}, //31 dead0 1
+	{BF_ArcMain_Dead0, {  0, 128, 128, 128}, { 53,  98}}, //32 dead0 2
+	{BF_ArcMain_Dead0, {128, 128, 128, 128}, { 53,  98}}, //33 dead0 3
+
+	{BF_ArcMain_Dead1, {  0,   0, 128, 128}, { 53,  98}}, //34 dead1 0
+	{BF_ArcMain_Dead1, {128,   0, 127, 128}, { 53,  98}}, //35 dead1 1
+	{BF_ArcMain_Dead1, {  0, 128, 128, 127}, { 53,  98}}, //36 dead1 2
+	{BF_ArcMain_Dead1, {128, 128, 127, 127}, { 53,  98}}, //37 dead1 3
+	
+	{BF_ArcMain_Dead2, {  0,   0, 128, 128}, { 53,  98}}, //38 dead2 body twitch 0
+	{BF_ArcMain_Dead2, {128,   0, 127, 128}, { 53,  98}}, //39 dead2 body twitch 1
+	{BF_ArcMain_Dead2, {  0, 128, 128, 127}, { 53,  98}}, //40 dead2 balls twitch 0
+	{BF_ArcMain_Dead2, {128, 128, 127, 127}, { 53,  98}}, //41 dead2 balls twitch 1
 };
 
 static const Animation char_bf_anim[PlayerAnim_Max] = {
@@ -136,15 +149,15 @@ static const Animation char_bf_anim[PlayerAnim_Max] = {
 	{2, (const u8[]){ 25, 26, 27, 28, 29, ASCR_BACK, 0}},     //PlayerAnim_LeftMiss
 
 /*
-	{5, (const u8[]){28, 29, 30, 31, 31, 31, 31, 31, 31, 31, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
-	{5, (const u8[]){31, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
-	{3, (const u8[]){32, 33, 34, 35, 35, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
-	{3, (const u8[]){35, ASCR_REPEAT}},                                                       //PlayerAnim_Dead3
-	{3, (const u8[]){36, 37, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead4
-	{3, (const u8[]){38, 39, 35, 35, 35, 35, 35, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
+	{5, (const u8[]){30, 31, 32, 33, 33, 33, 33, 33, 33, 33, ASCR_CHGANI, PlayerAnim_Dead1}}, //PlayerAnim_Dead0
+	{5, (const u8[]){33, ASCR_REPEAT}},                                                       //PlayerAnim_Dead1
+	{3, (const u8[]){34, 35, 36, 37, 37, 37, 37, 37, 37, 37, ASCR_CHGANI, PlayerAnim_Dead3}}, //PlayerAnim_Dead2
+	{3, (const u8[]){37, ASCR_REPEAT}},                                                       //PlayerAnim_Dead3
+	{3, (const u8[]){38, 39, 37, 37, 37, 37, 37, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead4
+	{3, (const u8[]){40, 41, 37, 37, 37, 37, 37, ASCR_CHGANI, PlayerAnim_Dead3}},             //PlayerAnim_Dead5
 	
-	{10, (const u8[]){35, 35, 35, ASCR_BACK, 1}}, //PlayerAnim_Dead4
-	{ 3, (const u8[]){38, 39, 35, ASCR_REPEAT}},  //PlayerAnim_Dead5 */
+	{10, (const u8[]){37, 37, 37, ASCR_BACK, 1}}, //PlayerAnim_Dead4
+	{ 3, (const u8[]){40, 41, 37, ASCR_REPEAT}},  //PlayerAnim_Dead5 */
 };
 
 //Boyfriend player functions
@@ -316,7 +329,7 @@ void Char_BF_SetAnim(Character *character, u8 anim)
 			break;
 		case PlayerAnim_Dead2:
 			//Load retry art
-			Gfx_LoadTex(&this->tex_retry, this->arc_ptr[BF_ArcDead_Retry], 0);
+			Gfx_LoadTex(&this->tex_retry, this->arc_ptr[BF_ArcMain_Retry], 0);
 			break;
 	}
 	
@@ -363,18 +376,22 @@ Character *Char_BF_New(fixed_t x, fixed_t y)
 	this->arc_main = IO_Read("\\CHAR\\BF.ARC;1");
 
 	const char **pathp = (const char *[]){
-		"idle.tim",   //Dad_ArcMain_Idle0
-		"left0.tim",  //Dad_ArcMain_Left
-		"left1.tim",  //Dad_ArcMain_Left
-		"down0.tim",  //Dad_ArcMain_Down
-		"down1.tim",  //Dad_ArcMain_Down
-		"up0.tim",    //Dad_ArcMain_Up
-		"up1.tim",    //Dad_ArcMain_Up
-		"right0.tim", //Dad_ArcMain_Right
-		"right1.tim", //Dad_ArcMain_Right
-		"miss0.tim", //Dad_ArcMain_Miss
-		"miss1.tim", //Dad_ArcMain_Miss
-		"miss2.tim", //Dad_ArcMain_Miss
+		"idle.tim",   //BF_ArcMain_Idle0
+		"left0.tim",  //BF_ArcMain_Left
+		"left1.tim",  //BF_ArcMain_Left
+		"down0.tim",  //BF_ArcMain_Down
+		"down1.tim",  //BF_ArcMain_Down
+		"up0.tim",    //BF_ArcMain_Up
+		"up1.tim",    //BF_ArcMain_Up
+		"right0.tim", //BF_ArcMain_Right
+		"right1.tim", //BF_ArcMain_Right
+		"miss0.tim", //BF_ArcMain_Miss
+		"miss1.tim", //BF_ArcMain_Miss
+		"miss2.tim", //BF_ArcMain_Miss
+		"dead0.tim", //BF_ArcMain_Dead0
+		"dead1.tim", //BF_ArcMain_Dead1
+		"dead2.tim", //BF_ArcMain_Dead2
+		"retry.tim", //BF_ArcMain_Retry
 		NULL
 	};
 	IO_Data *arc_ptr = this->arc_ptr;
