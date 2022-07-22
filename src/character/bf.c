@@ -316,7 +316,7 @@ void Char_BF_SetAnim(Character *character, u8 anim)
 			break;
 		case PlayerAnim_Dead2:
 			//Load retry art
-			//Gfx_LoadTex(&this->tex_retry, this->arc_ptr[BF_ArcDead_Retry], 0);
+			Gfx_LoadTex(&this->tex_retry, this->arc_ptr[BF_ArcDead_Retry], 0);
 			break;
 	}
 	

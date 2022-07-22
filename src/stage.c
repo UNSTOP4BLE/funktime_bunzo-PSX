@@ -63,6 +63,8 @@ static const u8 note_anims[4][3] = {
 	{CharAnim_Right, CharAnim_RightAlt, PlayerAnim_MissR},
 };
 
+
+
 //Stage definitions
 boolean noteshake;
 //check what opponent is singing
@@ -1618,20 +1620,6 @@ static boolean Stage_NextLoad(void)
 	}
 }
 
-void Stage_MoveNote(int danote, int note_y, int x, int y)
-{
-	//what do you expect this code to do lmao
-	if (x >= 0)
-		note_x[danote] += x;
-	else
-		note_x[danote] -= x;
-
-	if (y >= 0)
-		note_y[danote] += y;
-	else
-		note_y[danote] -= y;
-}
-
 void Stage_Tick(void)
 {
 	SeamLoad:;
@@ -2342,7 +2330,7 @@ void Stage_Tick(void)
 			stage.player->tick(stage.player);
 			
 			//Drop mic and change state if CD has finished reading and animation has ended
-			if (IO_IsReading() || stage.player->animatable.anim != PlayerAnim_Dead1)
+			if (stage.player->animatable.anim != PlayerAnim_Dead1)
 				break;
 			
 			stage.player->set_anim(stage.player, PlayerAnim_Dead2);
