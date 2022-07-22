@@ -898,27 +898,17 @@ void Menu_Tick(void)
 				const char *text;
 				boolean difficulty;
 			} menu_options[] = {
-				{StageId_1_1, "    FORK DEVS", false},
+				{StageId_1_1, "    PORT DEVS", false},
 				{StageId_1_1, "UNSTOPABLE", false},
 				{StageId_1_1, "IGORSOU", false},
 				{StageId_1_1, "    PSXFUNKIN DEVELOPER", false},
 				{StageId_1_1, "CUCKYDEV", false},
-				{StageId_1_1, "    COOL PEOPLE", false},
-				{StageId_1_1, "IGORSOU", false},
-				{StageId_1_1, "DREAMCASTNICK", false},
-				{StageId_1_1, "MAXDEV", false},
-				{StageId_1_1, "CUCKYDEV", false},
-				{StageId_1_1, "LUCKY", false},
-				{StageId_1_1, "MRRUMBLEROSES", false},
-				{StageId_1_1, "JOHN PAUL", false},
-				{StageId_1_1, "VICTOR", false},
-				{StageId_1_1, "GOOMBAKUNGFU", false},
-				{StageId_1_1, "GTHREEYT", false},
-				{StageId_1_1, "BILIOUS", false},
-				{StageId_1_1, "ZERIBEN", false},
-				{StageId_1_1, "GALAXY YT", false},
-				{StageId_1_1, "NINTENDOBRO", false},
-				{StageId_1_1, "LORD SCOUT", false},
+				{StageId_1_1, "    OG MOD DEVS", false},
+				{StageId_1_1, "RICHILIX", false},
+				{StageId_1_1, "HIPPOBOI", false},
+				{StageId_1_1, "RORUTOP", false},
+				{StageId_1_1, "RAVEYT", false},
+				{StageId_1_1, "SOCIETY", false},
 			};
 			    
 			//Initialize page

@@ -49,7 +49,7 @@ void DeadSc_LoadSFX()
 void DeadSc_Play(int animcooldown)
 {
 	animspeed ++;
-	FntPrint("%d", dedtimer);
+	//FntPrint("%d", dedtimer);
 	dedtimer ++;
 
 	if (dedtimer == 1)

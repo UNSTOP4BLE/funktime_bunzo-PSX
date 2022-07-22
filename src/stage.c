@@ -1674,7 +1674,17 @@ void Stage_Tick(void)
 			RECT pipe_src = {18, 0, 237, 255};
 			RECT pipe_dst = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
+			if ((stage.mode == StageMode_Swap) ? !(stage.cur_section->flag & SECTION_FLAG_OPPFOCUS) : stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
+				Gfx_BlendTex(&stage.tex_screen, &pipe_src, &pipe_dst, 1);
 
+			//Draw text
+			if (stage.song_step <= 50)
+			stage.font_cdr.draw(&stage.font_cdr,
+				"Press the notes according to the sequence...",
+				FIXED_DEC(-SCREEN_WIDTH / 3,1), 
+				FIXED_DEC(50,1),
+				FontAlign_Left
+			);
             //check if the stage has 2 opponents
 			if (has2opponents == 0)
 			{
@@ -2214,9 +2224,6 @@ void Stage_Tick(void)
 			if (stage.back->draw_fg != NULL)
 				stage.back->draw_fg(stage.back);
 			
-			if ((stage.mode == StageMode_Swap) ? !(stage.cur_section->flag & SECTION_FLAG_OPPFOCUS) : stage.cur_section->flag & SECTION_FLAG_OPPFOCUS)
-				Gfx_BlendTex(&stage.tex_screen, &pipe_src, &pipe_dst, 1);
-
 			//Tick foreground objects
 			ObjectList_Tick(&stage.objlist_fg);
 			
